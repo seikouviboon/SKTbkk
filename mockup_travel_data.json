@@ -1,0 +1,447 @@
+{
+  "system": "ระบบบันทึกการเดินทาง (GPS & AI Verification)",
+  "organization": "สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (สกต.กทม.)",
+  "purpose": "ข้อมูลจำลอง (Mock-up Data) 5 วัน เพื่อนำเสนอคณะกรรมการบริหาร",
+  "rate_policy": {
+    "vehicle_type": "รถยนต์ส่วนบุคคล/ปฏิบัติงาน",
+    "fuel_rate_per_km": 4.00,
+    "wear_rate_per_km": 1.00,
+    "total_rate_per_km": 5.00
+  },
+  "summary_kpi": {
+    "total_days": 5,
+    "total_waypoints": 32,
+    "total_distance_km": 326.70,
+    "total_claim_amount_thb": 1633.50,
+    "avg_distance_per_day_km": 65.34,
+    "avg_cost_per_waypoint_thb": 51.05,
+    "gps_verification_rate": "100%"
+  },
+  "trips": [
+    {
+      "day_number": 1,
+      "trip_code": "TRIP-20261102-001",
+      "date": "2026-11-02",
+      "day_name_th": "วันจันทร์",
+      "officer": {
+        "name": "นายสมเกียรติ สิทธิวงศ์",
+        "position": "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        "department": "ฝ่ายการตลาดและจัดจำหน่าย"
+      },
+      "vehicle": "รถยนต์ส่วนกลาง ทะเบียน 1กข-4589 กทม.",
+      "zone": "กรุงเทพฯ โซนตะวันออก (มีนบุรี - บางกะปิ - ลาดกระบัง)",
+      "total_waypoints": 6,
+      "total_distance_km": 68.5,
+      "fuel_amount": 274.00,
+      "wear_amount": 68.50,
+      "total_claim_amount": 342.50,
+      "status": "approved",
+      "waypoints": [
+        {
+          "step": 1,
+          "type": "start",
+          "time": "08:30",
+          "location_name": "สำนักงาน สกต.กทม. (จุดเริ่มต้น)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 0.0,
+          "objective": "เช็กอินเริ่มต้นปฏิบัติงาน ตรวจความพร้อมเอกสารใบส่งของและแบบฟอร์มตรวจสต็อก"
+        },
+        {
+          "step": 2,
+          "type": "waypoint",
+          "time": "09:45",
+          "location_name": "ธ.ก.ส. สาขาบางกะปิ",
+          "latitude": 13.7662,
+          "longitude": 100.6450,
+          "distance_from_prev_km": 16.2,
+          "objective": "ตรวจเช็กสต็อกข้าวหอมมะลิ 105 (ถุง 5 กก.) และสรุปยอดขายประจำสัปดาห์"
+        },
+        {
+          "step": 3,
+          "type": "waypoint",
+          "time": "11:15",
+          "location_name": "ร้านค้าสหกรณ์เคหะมีนบุรี",
+          "latitude": 13.8140,
+          "longitude": 100.7305,
+          "distance_from_prev_km": 12.8,
+          "objective": "ตรวจสอบสภาพบรรจุภัณฑ์ข้าวสาร จัดเรียงชั้นวางและป้ายโปรโมชัน"
+        },
+        {
+          "step": 4,
+          "type": "waypoint",
+          "time": "13:30",
+          "location_name": "ธ.ก.ส. สาขามีนบุรี",
+          "latitude": 13.8152,
+          "longitude": 100.7289,
+          "distance_from_prev_km": 1.5,
+          "objective": "ประสานงาน ผจก.สาขา ขยายพื้นที่วางจำหน่ายข้าวไรซ์เบอร์รีและข้าว กข43"
+        },
+        {
+          "step": 5,
+          "type": "waypoint",
+          "time": "15:00",
+          "location_name": "จุดจำหน่ายเครือข่ายประชารัฐ ลาดกระบัง",
+          "latitude": 13.7225,
+          "longitude": 100.7850,
+          "distance_from_prev_km": 14.5,
+          "objective": "ติดตามยอดขายข้าวสารบรรจุถุง และรับคำสั่งซื้อล่วงหน้าสำหรับรอบสัปดาห์ถัดไป"
+        },
+        {
+          "step": 6,
+          "type": "checkout",
+          "time": "17:00",
+          "location_name": "สำนักงาน สกต.กทม. (จุดสิ้นสุด/เช็คเอาต์)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 23.5,
+          "objective": "เช็คเอาต์สิ้นสุดภารกิจ นำส่งรายงานและสรุปข้อมูลผ่านระบบดิจิทัล"
+        }
+      ]
+    },
+    {
+      "day_number": 2,
+      "trip_code": "TRIP-20261103-002",
+      "date": "2026-11-03",
+      "day_name_th": "วันอังคาร",
+      "officer": {
+        "name": "นายสมเกียรติ สิทธิวงศ์",
+        "position": "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        "department": "ฝ่ายการตลาดและจัดจำหน่าย"
+      },
+      "vehicle": "รถยนต์ส่วนกลาง ทะเบียน 1กข-4589 กทม.",
+      "zone": "กรุงเทพฯ ฝั่งธนบุรี & พระราม 2 (บางขุนเทียน - ทุ่งครุ - ราษฎร์บูรณะ)",
+      "total_waypoints": 8,
+      "total_distance_km": 74.2,
+      "fuel_amount": 296.80,
+      "wear_amount": 74.20,
+      "total_claim_amount": 371.00,
+      "status": "approved",
+      "waypoints": [
+        {
+          "step": 1,
+          "type": "start",
+          "time": "08:15",
+          "location_name": "สำนักงาน สกต.กทม. (จุดเริ่มต้น)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 0.0,
+          "objective": "เช็กอินเริ่มต้นเดินทาง ตรวจเช็กใบกำกับภาษีและใบส่งมอบสินค้า"
+        },
+        {
+          "step": 2,
+          "type": "waypoint",
+          "time": "09:10",
+          "location_name": "ธ.ก.ส. สาขาบางขุนเทียน",
+          "latitude": 13.6590,
+          "longitude": 100.4350,
+          "distance_from_prev_km": 15.4,
+          "objective": "ส่งมอบรายงานยอดจำหน่ายข้าวสาร และตรวจสอบจุดวางจำหน่ายโถงบริการ"
+        },
+        {
+          "step": 3,
+          "type": "waypoint",
+          "time": "10:20",
+          "location_name": "สหกรณ์การเกษตรบางบอน จำกัด",
+          "latitude": 13.6655,
+          "longitude": 100.3980,
+          "distance_from_prev_km": 5.8,
+          "objective": "ตรวจนับสต็อกข้าวหอมมะลิคัดพิเศษ และหารือแนวทางการจัดโปรโมชันร่วม"
+        },
+        {
+          "step": 4,
+          "type": "waypoint",
+          "time": "11:30",
+          "location_name": "ร้านทวีทรัพย์การค้า พระราม 2 (ร้านฝากขาย)",
+          "latitude": 13.6380,
+          "longitude": 100.4120,
+          "distance_from_prev_km": 4.6,
+          "objective": "ส่งมอบข้าวหอมมะลิ 100 ถุง พร้อมให้คำแนะนำเรื่องการควบคุมความชื้นในการเก็บรักษา"
+        },
+        {
+          "step": 5,
+          "type": "waypoint",
+          "time": "13:15",
+          "location_name": "ธ.ก.ส. สาขาทุ่งครุ (หน้าร้าน staff01)",
+          "latitude": 13.6315,
+          "longitude": 100.5080,
+          "distance_from_prev_km": 11.2,
+          "objective": "ตรวจสต็อกหน้าร้านจำหน่าย สกต.กทม. ตรวจสอบยอดเงินโอน QR Payment แม่มณี SCB"
+        },
+        {
+          "step": 6,
+          "type": "waypoint",
+          "time": "14:30",
+          "location_name": "ร้านประเสริฐมินิมาร์ท ทุ่งครุ (staff02)",
+          "latitude": 13.6420,
+          "longitude": 100.5210,
+          "distance_from_prev_km": 2.1,
+          "objective": "ตรวจนับสต็อกข้าวสารฝากขาย สรุปยอดขายเงินสด และเก็บเงินนำส่งบัญชี"
+        },
+        {
+          "step": 7,
+          "type": "waypoint",
+          "time": "15:45",
+          "location_name": "ธ.ก.ส. สาขาราษฎร์บูรณะ",
+          "latitude": 13.6820,
+          "longitude": 100.4950,
+          "distance_from_prev_km": 6.8,
+          "objective": "ตรวจนับสต็อกคงเหลือปลายเดือน และประสานงานส่งข้าวสารเพิ่มในสัปดาห์หน้า"
+        },
+        {
+          "step": 8,
+          "type": "checkout",
+          "time": "17:15",
+          "location_name": "สำนักงาน สกต.กทม. (จุดสิ้นสุด/เช็คเอาต์)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 28.3,
+          "objective": "เช็คเอาต์ นำส่งเงินสดจากการจำหน่ายเข้าฝ่ายการเงิน และสรุปรายงานการเดินทาง"
+        }
+      ]
+    },
+    {
+      "day_number": 3,
+      "trip_code": "TRIP-20261104-003",
+      "date": "2026-11-04",
+      "day_name_th": "วันพุธ",
+      "officer": {
+        "name": "นายสมเกียรติ สิทธิวงศ์",
+        "position": "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        "department": "ฝ่ายการตลาดและจัดจำหน่าย"
+      },
+      "vehicle": "รถยนต์ส่วนกลาง ทะเบียน 1กข-4589 กทม.",
+      "zone": "กรุงเทพฯ โซนเหนือ & ศูนย์ราชการ (หลักสี่ - ดอนเมือง)",
+      "total_waypoints": 4,
+      "total_distance_km": 52.8,
+      "fuel_amount": 211.20,
+      "wear_amount": 52.80,
+      "total_claim_amount": 264.00,
+      "status": "approved",
+      "waypoints": [
+        {
+          "step": 1,
+          "type": "start",
+          "time": "08:45",
+          "location_name": "สำนักงาน สกต.กทม. (จุดเริ่มต้น)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 0.0,
+          "objective": "เช็กอินเริ่มต้น นำตัวอย่างข้าวสารฤดูกาลใหม่และเอกสารเสนอราคา"
+        },
+        {
+          "step": 2,
+          "type": "waypoint",
+          "time": "10:00",
+          "location_name": "สหกรณ์การเกษตรหลักสี่ จำกัด",
+          "latitude": 13.8860,
+          "longitude": 100.5820,
+          "distance_from_prev_km": 19.5,
+          "objective": "ประชุมเจรจาความร่วมมือนำข้าวสารบรรจุถุง สกต.กทม. วางขายในเครือข่ายร้านค้าสหกรณ์"
+        },
+        {
+          "step": 3,
+          "type": "waypoint",
+          "time": "13:30",
+          "location_name": "ธ.ก.ส. สาขาดอนเมือง",
+          "latitude": 13.9180,
+          "longitude": 100.5980,
+          "distance_from_prev_km": 6.8,
+          "objective": "ตรวจเยี่ยมบูธประชาสัมพันธ์ข้าวสารคุณภาพ ธ.ก.ส. และพบลูกค้าสมาชิกผู้ซื้อประจำ"
+        },
+        {
+          "step": 4,
+          "type": "checkout",
+          "time": "16:30",
+          "location_name": "สำนักงาน สกต.กทม. (จุดสิ้นสุด/เช็คเอาต์)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 26.5,
+          "objective": "เช็คเอาต์ สรุปผลการเจรจาขยายจุดจำหน่ายสินค้าเข้าที่ประชุมฝ่ายการตลาด"
+        }
+      ]
+    },
+    {
+      "day_number": 4,
+      "trip_code": "TRIP-20261105-004",
+      "date": "2026-11-05",
+      "day_name_th": "วันพฤหัสบดี",
+      "officer": {
+        "name": "นายสมเกียรติ สิทธิวงศ์",
+        "position": "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        "department": "ฝ่ายการตลาดและจัดจำหน่าย"
+      },
+      "vehicle": "รถยนต์ส่วนกลาง ทะเบียน 1กข-4589 กทม.",
+      "zone": "กรุงเทพฯ ชั้นใน & ธนบุรีชั้นใน (คลองเตย - ยานนาวา - วงเวียนใหญ่ - บางกอกน้อย)",
+      "total_waypoints": 9,
+      "total_distance_km": 61.4,
+      "fuel_amount": 245.60,
+      "wear_amount": 61.40,
+      "total_claim_amount": 307.00,
+      "status": "approved",
+      "waypoints": [
+        {
+          "step": 1,
+          "type": "start",
+          "time": "08:00",
+          "location_name": "สำนักงาน สกต.กทม. (จุดเริ่มต้น)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 0.0,
+          "objective": "เช็กอินเริ่มต้นภารกิจ สุ่มตรวจรอบใหญ่ใจกลางเมืองหลวง"
+        },
+        {
+          "step": 2,
+          "type": "waypoint",
+          "time": "08:50",
+          "location_name": "ธ.ก.ส. สาขาคลองเตย",
+          "latitude": 13.7190,
+          "longitude": 100.5600,
+          "distance_from_prev_km": 9.5,
+          "objective": "สุ่มตรวจสอบมาตรฐานความชื้นและอายุข้าวสารบนชั้นวางหน้าร้านสาขา"
+        },
+        {
+          "step": 3,
+          "type": "waypoint",
+          "time": "09:45",
+          "location_name": "ร้านค้าสวัสดิการชุมชนบ่อนไก่",
+          "latitude": 13.7250,
+          "longitude": 100.5480,
+          "distance_from_prev_km": 2.2,
+          "objective": "เช็กสต็อกข้าวเหนียว กข6 และข้าวกล้องเพื่อสุขภาพ สอบถามความพึงพอใจชุมชน"
+        },
+        {
+          "step": 4,
+          "type": "waypoint",
+          "time": "11:00",
+          "location_name": "ธ.ก.ส. สาขายานนาวา",
+          "latitude": 13.7020,
+          "longitude": 100.5340,
+          "distance_from_prev_km": 4.1,
+          "objective": "ตรวจป้ายราคาสินค้า ป้ายส่งเสริมการขาย สกต. และสื่อตั้งโต๊ะประชาสัมพันธ์"
+        },
+        {
+          "step": 5,
+          "type": "waypoint",
+          "time": "12:30",
+          "location_name": "จุดจำหน่ายสหกรณ์เคหะพระราม 3",
+          "latitude": 13.6890,
+          "longitude": 100.5280,
+          "distance_from_prev_km": 2.3,
+          "objective": "เก็บรวบรวมข้อมูลสถิติการซื้อซ้ำของผู้บริโภคคอนโดมิเนียมและที่อยู่อาศัย"
+        },
+        {
+          "step": 6,
+          "type": "waypoint",
+          "time": "13:45",
+          "location_name": "ธ.ก.ส. สาขาบางคอแหลม",
+          "latitude": 13.6980,
+          "longitude": 100.5050,
+          "distance_from_prev_km": 3.4,
+          "objective": "รับคำสั่งซื้อข้าวหอมมะลิสำหรับเป็นของขวัญปีใหม่จากหน่วยงานภาครัฐ"
+        },
+        {
+          "step": 7,
+          "type": "waypoint",
+          "time": "14:50",
+          "location_name": "ร้านเพื่อนเกษตร วงเวียนใหญ่ (ตัวแทนจำหน่าย)",
+          "latitude": 13.7260,
+          "longitude": 100.4930,
+          "distance_from_prev_km": 5.2,
+          "objective": "ตรวจสต็อกและส่งมอบข้าวสารหอมมะลิ 100% เพิ่มเติมจำนวน 50 ถุง"
+        },
+        {
+          "step": 8,
+          "type": "waypoint",
+          "time": "16:00",
+          "location_name": "ธ.ก.ส. สาขาบางกอกน้อย",
+          "latitude": 13.7550,
+          "longitude": 100.4720,
+          "distance_from_prev_km": 6.8,
+          "objective": "ส่งมอบใบเสร็จรับเงิน/ใบส่งของ และตรวจนับสต็อกคงเหลือ"
+        },
+        {
+          "step": 9,
+          "type": "checkout",
+          "time": "17:30",
+          "location_name": "สำนักงาน สกต.กทม. (จุดสิ้นสุด/เช็คเอาต์)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 27.9,
+          "objective": "เช็คเอาต์ สรุปรายงานการตรวจสอบ 8 จุดตรวจเข้าสู่ระบบ AI Dashboard"
+        }
+      ]
+    },
+    {
+      "day_number": 5,
+      "trip_code": "TRIP-20261106-005",
+      "date": "2026-11-06",
+      "day_name_th": "วันศุกร์",
+      "officer": {
+        "name": "นายสมเกียรติ สิทธิวงศ์",
+        "position": "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        "department": "ฝ่ายการตลาดและจัดจำหน่าย"
+      },
+      "vehicle": "รถยนต์ส่วนกลาง ทะเบียน 1กข-4589 กทม.",
+      "zone": "กรุงเทพฯ ฝั่งตะวันตก & ปริมณฑล (ตลิ่งชัน - ทวีวัฒนา - นนทบุรี)",
+      "total_waypoints": 5,
+      "total_distance_km": 69.8,
+      "fuel_amount": 279.20,
+      "wear_amount": 69.80,
+      "total_claim_amount": 349.00,
+      "status": "approved",
+      "waypoints": [
+        {
+          "step": 1,
+          "type": "start",
+          "time": "08:30",
+          "location_name": "สำนักงาน สกต.กทม. (จุดเริ่มต้น)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 0.0,
+          "objective": "เช็กอินเริ่มต้น เตรียมรายงานสรุปยอดขายรอบสัปดาห์เพื่อนำเสนอจุดจำหน่าย"
+        },
+        {
+          "step": 2,
+          "type": "waypoint",
+          "time": "09:40",
+          "location_name": "ธ.ก.ส. สาขาตลิ่งชัน",
+          "latitude": 13.7780,
+          "longitude": 100.4450,
+          "distance_from_prev_km": 11.5,
+          "objective": "ตรวจจุดจำหน่ายข้าวสารโครงการพิเศษเพื่อสวัสดิการเกษตรกรและประชาชน"
+        },
+        {
+          "step": 3,
+          "type": "waypoint",
+          "time": "11:15",
+          "location_name": "สหกรณ์การเกษตรทวีวัฒนา จำกัด",
+          "latitude": 13.7850,
+          "longitude": 100.3540,
+          "distance_from_prev_km": 12.2,
+          "objective": "ตรวจนับสต็อกสิ้นสัปดาห์ร่วมกับเจ้าหน้าที่คลังสินค้าสหกรณ์"
+        },
+        {
+          "step": 4,
+          "type": "waypoint",
+          "time": "14:00",
+          "location_name": "ร้านศาลายาการเกษตร (ร้านฝากขายตัวแทน)",
+          "latitude": 13.8010,
+          "longitude": 100.3220,
+          "distance_from_prev_km": 5.4,
+          "objective": "กระทบยอดขายและรับชำระเงินค่าข้าวสารฝากขายรอบสัปดาห์เข้าบัญชี สกต.กทม."
+        },
+        {
+          "step": 5,
+          "type": "checkout",
+          "time": "16:45",
+          "location_name": "สำนักงาน สกต.กทม. (จุดสิ้นสุด/เช็คเอาต์)",
+          "latitude": 13.7563,
+          "longitude": 100.5018,
+          "distance_from_prev_km": 40.7,
+          "objective": "เช็คเอาต์ปิดรอบสัปดาห์ นำส่งใบเดินทางและรายงานสรุป 5 วัน ต่อผู้บริหาร"
+        }
+      ]
+    }
+  ]
+}

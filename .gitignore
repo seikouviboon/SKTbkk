@@ -1,0 +1,9 @@
+# Credentials & Temporary Session files
+*cookie*.txt
+session*.txt
+*.tmp
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

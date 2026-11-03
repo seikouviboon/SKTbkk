@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบการอนุมัติและเบิกค่าใช้จ่ายการเดินทาง — สกต.กทม.</title>
+    
+    <!-- Google Fonts: Prompt & Sarabun -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-baac: #008751;
+            --primary-dark: #005f38;
+            --accent-gold: #f59e0b;
+        }
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        .navbar-baac {
+            background: linear-gradient(135deg, var(--primary-baac) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .card-custom {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            background: white;
+        }
+        .kpi-card {
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-3px);
+        }
+        .badge-status {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        #interactiveMap {
+            height: 380px;
+            width: 100%;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        .nav-pills .nav-link {
+            font-weight: 500;
+            border-radius: 10px;
+            color: #475569;
+            padding: 10px 18px;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-baac);
+            color: white;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            #printableVoucherArea { display: block !important; }
+            body { background: white !important; }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- Header Navbar -->
+<nav class="navbar navbar-dark navbar-baac py-3 sticky-top no-print">
+    <div class="container-fluid px-lg-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2">
+            <span class="fs-3">🌾</span>
+            <div>
+                <h5 class="fw-bold mb-0 text-white">สกต.กทม. — ระบบการอนุมัติและเบิกค่าใช้จ่ายการเดินทาง</h5>
+                <small class="text-white-50">สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (GPS & AI Verification)</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-white text-success px-3 py-2 fw-bold shadow-sm">
+                <i class="bi bi-person-check-fill me-1"></i>ผู้บริหาร / ผู้จัดการ สกต. (Admin)
+            </span>
+            <a href="https://sktbkk.seikouedu.com/travel/index.php" target="_blank" class="btn btn-outline-light btn-sm fw-bold">
+                <i class="bi bi-box-arrow-up-right me-1"></i>เปิดระบบจริง
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid py-4 px-lg-4 no-print flex-grow-1">
+
+    <!-- KPI Summary Dashboard -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card kpi-card bg-white p-3 border-start border-4 border-warning">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted fw-bold">⏳ คำขอรอการพิจารณา</small>
+                        <div class="fs-2 fw-bold text-warning" id="kpiPendingCount">2 <span class="fs-6 fw-normal text-muted">รายการ</span></div>
+                        <small class="text-secondary">ยอดเงินรออนุมัติ: <strong id="kpiPendingAmount">฿656.00</strong></small>
+                    </div>
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3 text-warning">
+                        <i class="bi bi-hourglass-split fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card kpi-card bg-white p-3 border-start border-4 border-success">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted fw-bold">✅ อนุมัติแล้ว (ลงบัญชีแล้ว)</small>
+                        <div class="fs-2 fw-bold text-success" id="kpiApprovedCount">3 <span class="fs-6 fw-normal text-muted">รายการ</span></div>
+                        <small class="text-secondary">ยอดเงินที่อนุมัติจ่าย: <strong id="kpiApprovedAmount">฿977.50</strong></small>
+                    </div>
+                    <div class="rounded-circle bg-success bg-opacity-10 p-3 text-success">
+                        <i class="bi bi-check2-circle fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card kpi-card bg-white p-3 border-start border-4 border-info">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted fw-bold">📍 จุดตรวจและจุดแวะรวม</small>
+                        <div class="fs-2 fw-bold text-info">32 <span class="fs-6 fw-normal text-muted">จุดตรวจ</span></div>
+                        <small class="text-secondary">GPS ตรวจสอบผ่านเกณฑ์: <strong>100%</strong></small>
+                    </div>
+                    <div class="rounded-circle bg-info bg-opacity-10 p-3 text-info">
+                        <i class="bi bi-geo-alt-fill fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card kpi-card bg-white p-3 border-start border-4 border-primary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted fw-bold">🛣️ ระยะทางรวม 5 วัน</small>
+                        <div class="fs-2 fw-bold text-primary">326.70 <span class="fs-6 fw-normal text-muted">กม.</span></div>
+                        <small class="text-secondary">เฉลี่ยต่อวัน: <strong>65.34 กม./วัน</strong></small>
+                    </div>
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary">
+                        <i class="bi bi-speedometer2 fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <ul class="nav nav-pills mb-4 bg-white p-2 rounded-3 shadow-sm border" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab-approval-tab" data-bs-toggle="pill" data-bs-target="#tab-approval" type="button" role="tab">
+                <i class="bi bi-shield-check me-2"></i>1. ศูนย์พิจารณาอนุมัติใบขอเบิก (Approval Queue)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-calculator-tab" data-bs-toggle="pill" data-bs-target="#tab-calculator" type="button" role="tab">
+                <i class="bi bi-calculator-fill me-2"></i>2. ระบบคำนวณเบิกค่าพาหนะ (Claim Calculator)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-voucher-tab" data-bs-toggle="pill" data-bs-target="#tab-voucher" type="button" role="tab">
+                <i class="bi bi-printer-fill me-2"></i>3. ตัวอย่างใบสำคัญจ่าย / ใบเบิกทางการ (Print Voucher)
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="pills-tabContent">
+
+        <!-- TAB 1: ศูนย์พิจารณาอนุมัติ -->
+        <div class="tab-pane fade show active" id="tab-approval" role="tabpanel">
+            <div class="card card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-dark">
+                            <i class="bi bi-list-check me-2 text-primary"></i>รายการคำขอเบิกค่าใช้จ่ายการเดินทาง (5 วันทำการ)
+                        </h5>
+                        <p class="text-muted small mb-0">ผู้อนุมัติสามารถคลิก <strong>"ตรวจหลักฐาน & พิจารณา"</strong> เพื่อดูพิกัดดาวเทียม รูปถ่าย และกดอนุมัติ/ส่งกลับแก้ไขได้ทันที</p>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-secondary active" onclick="filterTable('all', this)">ทั้งหมด (5)</button>
+                        <button class="btn btn-outline-warning" onclick="filterTable('submitted', this)">⏳ รออนุมัติ (2)</button>
+                        <button class="btn btn-outline-success" onclick="filterTable('approved', this)">✅ อนุมัติแล้ว (3)</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-muted">
+                            <tr>
+                                <th>เลขที่ใบเบิก / วันที่</th>
+                                <th>ผู้ขอเบิก / รถยนต์</th>
+                                <th>ภารกิจ & โซนพื้นที่</th>
+                                <th class="text-center">จุดตรวจ (GPS)</th>
+                                <th class="text-end">ระยะทาง</th>
+                                <th class="text-end">ยอดขอเบิก</th>
+                                <th class="text-center">สถานะ</th>
+                                <th class="text-center">ดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="claimsTableBody">
+                            <!-- แถวจะถูกโหลดโดย Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: เครื่องคำนวณเบิกค่าใช้จ่าย -->
+        <div class="tab-pane fade" id="tab-calculator" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card card-custom p-4">
+                        <h5 class="fw-bold mb-3 text-primary">
+                            <i class="bi bi-sliders me-2"></i>ทดลองจำลองการคำนวณเบิกเงินตามมติคณะกรรมการ
+                        </h5>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">เลือกวิธีคิดอัตราค่าเดินทาง:</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="form-check p-3 border rounded-3 bg-light">
+                                        <input class="form-check-input" type="radio" name="simCalcType" id="simTypeDistance" value="distance" checked onchange="updateSimCalc()">
+                                        <label class="form-check-label fw-bold text-primary" for="simTypeDistance">
+                                            ตามระยะทางจริง (กม.)
+                                        </label>
+                                        <div class="small text-muted mt-1">ค่าน้ำมัน ฿4.00 + ค่าสึกหรอ ฿1.00 = รวม ฿5.00/กม.</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check p-3 border rounded-3 bg-light">
+                                        <input class="form-check-input" type="radio" name="simCalcType" id="simTypeZone" value="zone" onchange="updateSimCalc()">
+                                        <label class="form-check-label fw-bold text-success" for="simTypeZone">
+                                            เหมาจ่ายตามโซน
+                                        </label>
+                                        <div class="small text-muted mt-1">กทม. ชั้นใน (฿300), ปริมณฑล (฿500), ตจว. (฿1,200)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ตัวแปรระยะทาง -->
+                        <div id="simDistanceSection">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">ระยะทางรวมที่วิ่งจริง (กิโลเมตร):</label>
+                                <div class="input-group input-group-lg">
+                                    <input type="number" id="simKmInput" class="form-control fw-bold text-primary" value="68.5" step="0.1" oninput="updateSimCalc()">
+                                    <span class="input-group-text bg-white fw-bold">กม.</span>
+                                </div>
+                                <small class="text-muted">ทดลองปรับระยะทางเพื่อดูการคำนวณเงินทันที</small>
+                            </div>
+                        </div>
+
+                        <!-- ตัวแปรโซน -->
+                        <div id="simZoneSection" style="display:none;">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">เลือกโซนเหมาจ่าย:</label>
+                                <select id="simZoneSelect" class="form-select form-select-lg" onchange="updateSimCalc()">
+                                    <option value="300">โซนกรุงเทพฯ ชั้นใน (เหมาจ่าย ฿300.00 / วัน)</option>
+                                    <option value="500">โซนปริมณฑล (เหมาจ่าย ฿500.00 / วัน)</option>
+                                    <option value="1200">โซนต่างจังหวัด (เหมาจ่าย ฿1,200.00 / วัน)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card bg-success bg-opacity-10 border border-success p-3 rounded-3 mt-4">
+                            <h6 class="fw-bold text-success mb-2"><i class="bi bi-cash-coin me-1"></i>สรุปผลยอดเงินที่ระบบคำนวณให้:</h6>
+                            <div class="d-flex justify-content-between py-1 border-bottom border-success border-opacity-25" id="simRowFuel">
+                                <span>ค่าน้ำมันเชื้อเพลิง (฿4.00/กม.):</span>
+                                <strong id="simDisplayFuel">฿274.00</strong>
+                            </div>
+                            <div class="d-flex justify-content-between py-1 border-bottom border-success border-opacity-25" id="simRowWear">
+                                <span>ค่าสึกหรอยานพาหนะ (฿1.00/กม.):</span>
+                                <strong id="simDisplayWear">฿68.50</strong>
+                            </div>
+                            <div class="d-flex justify-content-between py-2 mt-2">
+                                <span class="fs-5 fw-bold text-dark">รวมเงินขออนุมัติเบิกจ่าย:</span>
+                                <span class="fs-3 fw-bold text-success" id="simDisplayTotal">฿342.50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card card-custom p-4 h-100">
+                        <h6 class="fw-bold text-dark mb-3"><i class="bi bi-shield-shaded text-primary me-2"></i>ระเบียบการเบิกจ่ายตามมติ สกต.กทม.</h6>
+                        <ul class="list-group list-group-flush small">
+                            <li class="list-group-item px-0">
+                                <strong>1. การตรวจสอบระยะทาง:</strong> ต้องมีพิกัดดาวเทียม GPS ติดมากับ EXIF ภาพถ่ายหน้าร้าน/จุดจำหน่ายครบทุกจุด
+                            </li>
+                            <li class="list-group-item px-0">
+                                <strong>2. อัตราค่าน้ำมัน:</strong> คิดตามมติคณะกรรมการ ครั้งที่ 1/2567 ที่อัตรา 4.00 บาท/กิโลเมตร
+                            </li>
+                            <li class="list-group-item px-0">
+                                <strong>3. ค่าเสื่อมสภาพ/ค่าสึกหรอ:</strong> เบิกจ่ายได้ 1.00 บาท/กิโลเมตร เพื่อบำรุงรักษายานพาหนะ
+                            </li>
+                            <li class="list-group-item px-0">
+                                <strong>4. การลงบัญชี:</strong> เมื่อผู้จัดการหรือกรรมการผู้มีอำนาจกดอนุมัติ ระบบจะส่งรายการเข้าตารางบัญชีค่าใช้จ่ายส่วนกลางทันที
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: ตัวอย่างใบสำคัญจ่ายทางการ -->
+        <div class="tab-pane fade" id="tab-voucher" role="tabpanel">
+            <div class="card card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-file-earmark-text-fill text-danger me-2"></i>ตัวอย่างใบเบิกและใบสำคัญจ่าย (แบบฟอร์มทางการ A4)
+                    </h5>
+                    <button class="btn btn-primary fw-bold btn-sm shadow-sm" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i> พิมพ์เอกสาร A4
+                    </button>
+                </div>
+                
+                <div class="border p-4 rounded-3 bg-white shadow-sm" style="font-family: 'Sarabun', sans-serif;">
+                    <div class="row align-items-center border-bottom pb-3 mb-3">
+                        <div class="col-2 text-center fs-1">🌾</div>
+                        <div class="col-7 text-center">
+                            <h5 class="fw-bold mb-0">สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด</h5>
+                            <div class="small fw-bold text-muted">(สกต.กทม.)</div>
+                            <h6 class="fw-bold mt-2 text-decoration-underline">ใบเบิกและใบสำคัญจ่ายเงินค่าใช้จ่ายในการปฏิบัติงานนอกสถานที่</h6>
+                        </div>
+                        <div class="col-3 text-end small">
+                            <div><strong>เลขที่ใบเบิก:</strong> #CLM-00001</div>
+                            <div><strong>รหัสทริป:</strong> TRIP-20261102-001</div>
+                            <div><strong>วันที่:</strong> 02/11/2026</div>
+                        </div>
+                    </div>
+
+                    <div class="row small g-2 mb-3">
+                        <div class="col-6"><strong>ชื่อผู้ขอเบิก:</strong> นายสมเกียรติ สิทธิวงศ์ (ฝ่ายการตลาดและจัดจำหน่าย)</div>
+                        <div class="col-6"><strong>ยานพาหนะ:</strong> รถยนต์ส่วนกลาง ทะเบียน 1กข-4589 กทม.</div>
+                        <div class="col-12"><strong>ภารกิจ:</strong> สำรวจจุดวางจำหน่ายข้าวสาร สกต. และตรวจสต็อกข้าวหอมมะลิ โซนมีนบุรี-บางกะปิ-ลาดกระบัง</div>
+                        <div class="col-12"><strong>เส้นทาง:</strong> สำนักงาน สกต.กทม. → ธ.ก.ส. บางกะปิ → เคหะมีนบุรี → ธ.ก.ส. มีนบุรี → ประชารัฐ ลาดกระบัง → สกต.กทม. (6 จุด)</div>
+                    </div>
+
+                    <table class="table table-bordered table-sm small mb-3">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>รายการค่าใช้จ่าย</th>
+                                <th>มติอ้างอิง</th>
+                                <th>ระยะทาง</th>
+                                <th>อัตรา</th>
+                                <th>จำนวนเงิน (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ค่าน้ำมันเชื้อเพลิง</td>
+                                <td class="text-center">มติ กก. ครั้งที่ 1/2567</td>
+                                <td class="text-center">68.50 กม.</td>
+                                <td class="text-end">฿4.00/กม.</td>
+                                <td class="text-end fw-bold">฿274.00</td>
+                            </tr>
+                            <tr>
+                                <td>ค่าสึกหรอยานพาหนะ</td>
+                                <td class="text-center">มติ กก. ครั้งที่ 1/2567</td>
+                                <td class="text-center">68.50 กม.</td>
+                                <td class="text-end">฿1.00/กม.</td>
+                                <td class="text-end fw-bold">฿68.50</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="4" class="text-end fw-bold">รวมเงินที่ขออนุมัติจ่ายทั้งสิ้น:</td>
+                                <td class="text-end fw-bold fs-6 text-primary">฿342.50</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row text-center mt-5 pt-3">
+                        <div class="col-4">
+                            <div style="border-bottom: 1px dotted #333; width: 80%; margin: 0 auto 5px;"></div>
+                            <div class="small fw-bold">(นายสมเกียรติ สิทธิวงศ์)</div>
+                            <div class="small text-muted">ผู้ขอเบิกเงิน</div>
+                        </div>
+                        <div class="col-4">
+                            <div style="border-bottom: 1px dotted #333; width: 80%; margin: 0 auto 5px;"></div>
+                            <div class="small fw-bold">(นางสาววราภรณ์ มั่นคง)</div>
+                            <div class="small text-muted">ผู้ตรวจสอบเอกสาร / บัญชี</div>
+                        </div>
+                        <div class="col-4">
+                            <div style="border-bottom: 1px dotted #333; width: 80%; margin: 0 auto 5px;"></div>
+                            <div class="small fw-bold">(ผู้จัดการ สกต.กทม.)</div>
+                            <div class="small text-muted">ผู้อนุมัติจ่ายเงิน</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal: ตรวจสอบหลักฐานพิกัด GPS และพิจารณาอนุมัติ -->
+<div class="modal fade no-print" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="modalTitle">
+                    <i class="bi bi-shield-check me-2"></i>พิจารณาอนุมัติใบขอเบิกค่าใช้จ่าย
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">ผู้ขอเบิก:</small>
+                        <strong class="fs-6 text-dark" id="modalOfficer">-</strong>
+                        <div class="text-muted small" id="modalVehicle">-</div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <small class="text-muted d-block">ยอดเงินขอเบิก:</small>
+                        <strong class="fs-4 text-success fw-bold" id="modalAmount">฿0.00</strong>
+                        <div class="badge bg-light text-primary border" id="modalCalcType">ตามระยะทาง</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-2 bg-light rounded small">
+                            <strong>ภารกิจ:</strong> <span id="modalPurpose">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- แผนที่พิกัดจริง Leaflet -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="bi bi-map-fill text-primary me-1"></i>แผนที่พิกัดดาวเทียม GPS และเส้นทางปฏิบัติงานจริง:
+                    </label>
+                    <div id="interactiveMap"></div>
+                </div>
+
+                <!-- รายการจุดแวะพร้อมรูปถ่าย GPS -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="bi bi-camera-fill text-info me-1"></i>รายการจุดตรวจที่ AI ยืนยันพิกัดแล้ว:
+                    </label>
+                    <div class="list-group list-group-flush border rounded" id="modalWaypointsList" style="max-height: 180px; overflow-y: auto;">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">บันทึกความเห็นของผู้อนุมัติ:</label>
+                    <input type="text" id="modalNote" class="form-control" value="ตรวจสอบหลักฐานภาพถ่ายและพิกัดดาวเทียมถูกต้องตามระเบียบ อนุมัติเบิกจ่ายได้">
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-danger fw-bold" onclick="rejectCurrentClaim()">
+                    <i class="bi bi-x-circle me-1"></i> ปฏิเสธ / ส่งกลับแก้ไข
+                </button>
+                <button type="button" class="btn btn-success fw-bold px-4" onclick="approveCurrentClaim()">
+                    <i class="bi bi-check2-circle me-1"></i> อนุมัติ & บันทึกบัญชีส่วนกลาง
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-auto py-3 bg-white border-top text-center text-muted no-print">
+    <div class="container">
+        <small>
+            &copy; 2026 <strong>สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (สกต.กทม.)</strong> | ระบบบริหารจัดการสต็อกและบันทึกการเดินทาง
+        </small>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// ข้อมูลจำลอง 5 วัน
+let claimsData = [
+    {
+        id: 1,
+        code: "TRIP-20261102-001",
+        claimCode: "CLM-00001",
+        date: "02/11/2026",
+        officer: "นายสมเกียรติ สิทธิวงศ์",
+        position: "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        vehicle: "รถยนต์ส่วนกลาง 1กข-4589 กทม.",
+        zone: "กรุงเทพฯ โซนตะวันออก (มีนบุรี-บางกะปิ-ลาดกระบัง)",
+        purpose: "ตรวจสต็อกข้าวหอมมะลิ 105 และติดตามยอดจำหน่าย",
+        waypointsCount: 6,
+        distanceKm: 68.50,
+        fuelAmount: 274.00,
+        wearAmount: 68.50,
+        totalAmount: 342.50,
+        calcType: "distance",
+        status: "approved",
+        approvedBy: "ผู้จัดการ สกต.กทม.",
+        waypoints: [
+            { step: 1, time: "08:30", name: "สำนักงาน สกต.กทม. (จุดเริ่มต้น)", lat: 13.7563, lng: 100.5018 },
+            { step: 2, time: "09:45", name: "ธ.ก.ส. สาขาบางกะปิ", lat: 13.7662, lng: 100.6450 },
+            { step: 3, time: "11:15", name: "ร้านค้าสหกรณ์เคหะมีนบุรี", lat: 13.8140, lng: 100.7305 },
+            { step: 4, time: "13:30", name: "ธ.ก.ส. สาขามีนบุรี", lat: 13.8152, lng: 100.7289 },
+            { step: 5, time: "15:00", name: "จุดจำหน่ายประชารัฐ ลาดกระบัง", lat: 13.7225, lng: 100.7850 },
+            { step: 6, time: "17:00", name: "สำนักงาน สกต.กทม. (เช็คเอาต์)", lat: 13.7563, lng: 100.5018 }
+        ]
+    },
+    {
+        id: 2,
+        code: "TRIP-20261103-002",
+        claimCode: "CLM-00002",
+        date: "03/11/2026",
+        officer: "นายสมเกียรติ สิทธิวงศ์",
+        position: "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        vehicle: "รถยนต์ส่วนกลาง 1กข-4589 กทม.",
+        zone: "ฝั่งธนบุรี & พระราม 2 (บางขุนเทียน-ทุ่งครุ)",
+        purpose: "ส่งมอบสินค้าและตรวจนับสต็อกข้าวสารบรรจุถุง (staff01/staff02)",
+        waypointsCount: 8,
+        distanceKm: 74.20,
+        fuelAmount: 296.80,
+        wearAmount: 74.20,
+        totalAmount: 371.00,
+        calcType: "distance",
+        status: "approved",
+        approvedBy: "ผู้จัดการ สกต.กทม.",
+        waypoints: [
+            { step: 1, time: "08:15", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 },
+            { step: 2, time: "09:10", name: "ธ.ก.ส. สาขาบางขุนเทียน", lat: 13.6590, lng: 100.4350 },
+            { step: 3, time: "10:20", name: "สหกรณ์การเกษตรบางบอน", lat: 13.6655, lng: 100.3980 },
+            { step: 4, time: "11:30", name: "ร้านทวีทรัพย์การค้า พระราม 2", lat: 13.6380, lng: 100.4120 },
+            { step: 5, time: "13:15", name: "ธ.ก.ส. สาขาทุ่งครุ (staff01)", lat: 13.6315, lng: 100.5080 },
+            { step: 6, time: "14:30", name: "ร้านประเสริฐมินิมาร์ท (staff02)", lat: 13.6420, lng: 100.5210 },
+            { step: 7, time: "15:45", name: "ธ.ก.ส. สาขาราษฎร์บูรณะ", lat: 13.6820, lng: 100.4950 },
+            { step: 8, time: "17:15", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 }
+        ]
+    },
+    {
+        id: 3,
+        code: "TRIP-20261104-003",
+        claimCode: "CLM-00003",
+        date: "04/11/2026",
+        officer: "นายสมเกียรติ สิทธิวงศ์",
+        position: "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        vehicle: "รถยนต์ส่วนกลาง 1กข-4589 กทม.",
+        zone: "กรุงเทพฯ โซนเหนือ (หลักสี่-ดอนเมือง)",
+        purpose: "ประชุมเจรจาขยายช่องทางจำหน่ายข้าวสารในเครือข่ายสหกรณ์",
+        waypointsCount: 4,
+        distanceKm: 52.80,
+        fuelAmount: 211.20,
+        wearAmount: 52.80,
+        totalAmount: 264.00,
+        calcType: "distance",
+        status: "approved",
+        approvedBy: "ผู้จัดการ สกต.กทม.",
+        waypoints: [
+            { step: 1, time: "08:45", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 },
+            { step: 2, time: "10:00", name: "สหกรณ์การเกษตรหลักสี่", lat: 13.8860, lng: 100.5820 },
+            { step: 3, time: "13:30", name: "ธ.ก.ส. สาขาดอนเมือง", lat: 13.9180, lng: 100.5980 },
+            { step: 4, time: "16:30", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 }
+        ]
+    },
+    {
+        id: 4,
+        code: "TRIP-20261105-004",
+        claimCode: "CLM-00004",
+        date: "05/11/2026",
+        officer: "นายสมเกียรติ สิทธิวงศ์",
+        position: "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        vehicle: "รถยนต์ส่วนกลาง 1กข-4589 กทม.",
+        zone: "กรุงเทพฯ ชั้นใน & ธนบุรี (คลองเตย-ยานนาวา)",
+        purpose: "สุ่มตรวจมาตรฐานความชื้นและจัดเรียงชั้นวางสินค้า 8 จุดตรวจ",
+        waypointsCount: 9,
+        distanceKm: 61.40,
+        fuelAmount: 245.60,
+        wearAmount: 61.40,
+        totalAmount: 307.00,
+        calcType: "distance",
+        status: "submitted",
+        approvedBy: "",
+        waypoints: [
+            { step: 1, time: "08:00", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 },
+            { step: 2, time: "08:50", name: "ธ.ก.ส. สาขาคลองเตย", lat: 13.7190, lng: 100.5600 },
+            { step: 3, time: "09:45", name: "ร้านค้าชุมชนบ่อนไก่", lat: 13.7250, lng: 100.5480 },
+            { step: 4, time: "11:00", name: "ธ.ก.ส. สาขายานนาวา", lat: 13.7020, lng: 100.5340 },
+            { step: 5, time: "12:30", name: "สหกรณ์เคหะพระราม 3", lat: 13.6890, lng: 100.5280 },
+            { step: 6, time: "13:45", name: "ธ.ก.ส. สาขาบางคอแหลม", lat: 13.6980, lng: 100.5050 },
+            { step: 7, time: "14:50", name: "ร้านเพื่อนเกษตร วงเวียนใหญ่", lat: 13.7260, lng: 100.4930 },
+            { step: 8, time: "16:00", name: "ธ.ก.ส. สาขาบางกอกน้อย", lat: 13.7550, lng: 100.4720 },
+            { step: 9, time: "17:30", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 }
+        ]
+    },
+    {
+        id: 5,
+        code: "TRIP-20261106-005",
+        claimCode: "CLM-00005",
+        date: "06/11/2026",
+        officer: "นายสมเกียรติ สิทธิวงศ์",
+        position: "เจ้าหน้าที่ส่งเสริมและตรวจติดตามจุดขาย",
+        vehicle: "รถยนต์ส่วนกลาง 1กข-4589 กทม.",
+        zone: "ตะวันตก & ปริมณฑล (ตลิ่งชัน-ทวีวัฒนา-ศาลายา)",
+        purpose: "ตรวจสต็อกสิ้นสัปดาห์และปิดรอบงวดฝากขาย",
+        waypointsCount: 5,
+        distanceKm: 69.80,
+        fuelAmount: 279.20,
+        wearAmount: 69.80,
+        totalAmount: 349.00,
+        calcType: "distance",
+        status: "submitted",
+        approvedBy: "",
+        waypoints: [
+            { step: 1, time: "08:30", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 },
+            { step: 2, time: "09:40", name: "ธ.ก.ส. สาขาตลิ่งชัน", lat: 13.7780, lng: 100.4450 },
+            { step: 3, time: "11:15", name: "สหกรณ์การเกษตรทวีวัฒนา", lat: 13.7850, lng: 100.3540 },
+            { step: 4, time: "14:00", name: "ร้านศาลายาการเกษตร", lat: 13.8010, lng: 100.3220 },
+            { step: 5, time: "16:45", name: "สำนักงาน สกต.กทม.", lat: 13.7563, lng: 100.5018 }
+        ]
+    }
+];
+
+let currentReviewClaim = null;
+let leafletMap = null;
+let currentFilter = 'all';
+
+function renderTable() {
+    const tbody = document.getElementById('claimsTableBody');
+    tbody.innerHTML = '';
+
+    const filtered = claimsData.filter(item => {
+        if (currentFilter === 'all') return true;
+        return item.status === currentFilter;
+    });
+
+    filtered.forEach(c => {
+        const isPending = c.status === 'submitted';
+        const statusBadge = isPending 
+            ? `<span class="badge bg-warning text-dark badge-status"><i class="bi bi-hourglass-split me-1"></i>รออนุมัติ</span>`
+            : `<span class="badge bg-success badge-status"><i class="bi bi-check-circle-fill me-1"></i>อนุมัติแล้ว</span>`;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>
+                <strong class="text-primary d-block">#${c.claimCode}</strong>
+                <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>${c.date}</small>
+                <div class="text-secondary small font-monospace">${c.code}</div>
+            </td>
+            <td>
+                <strong class="text-dark d-block">${c.officer}</strong>
+                <small class="text-secondary"><i class="bi bi-car-front me-1"></i>${c.vehicle}</small>
+            </td>
+            <td>
+                <div class="fw-bold text-dark small mb-1">${c.purpose}</div>
+                <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>${c.zone}</small>
+            </td>
+            <td class="text-center">
+                <span class="badge bg-light text-dark border">
+                    <i class="bi bi-camera-fill text-info me-1"></i>${c.waypointsCount} จุด (GPS ครบ)
+                </span>
+            </td>
+            <td class="text-end fw-bold text-secondary">
+                ${c.distanceKm.toFixed(2)} กม.
+                <small class="d-block text-muted fw-normal">฿5.00/กม.</small>
+            </td>
+            <td class="text-end">
+                <strong class="fs-6 text-success">฿${c.totalAmount.toFixed(2)}</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">น้ำมัน: ฿${c.fuelAmount.toFixed(1)} | สึกหรอ: ฿${c.wearAmount.toFixed(1)}</small>
+            </td>
+            <td class="text-center">
+                ${statusBadge}
+                ${c.approvedBy ? `<small class="text-muted d-block mt-1" style="font-size: 0.7rem;">${c.approvedBy}</small>` : ''}
+            </td>
+            <td class="text-center">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn ${isPending ? 'btn-success fw-bold' : 'btn-outline-primary'}" onclick="openReviewModal(${c.id})">
+                        <i class="bi bi-shield-check me-1"></i>${isPending ? 'ตรวจ & อนุมัติ' : 'ดูหลักฐาน'}
+                    </button>
+                    ${!isPending ? `
+                    <button class="btn btn-outline-secondary" onclick="viewVoucher(${c.id})" title="พิมพ์ใบเบิก">
+                        <i class="bi bi-printer"></i>
+                    </button>` : ''}
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    updateKPIs();
+}
+
+function updateKPIs() {
+    const pendingList = claimsData.filter(c => c.status === 'submitted');
+    const approvedList = claimsData.filter(c => c.status === 'approved');
+
+    const pendingSum = pendingList.reduce((acc, c) => acc + c.totalAmount, 0);
+    const approvedSum = approvedList.reduce((acc, c) => acc + c.totalAmount, 0);
+
+    document.getElementById('kpiPendingCount').innerHTML = `${pendingList.length} <span class="fs-6 fw-normal text-muted">รายการ</span>`;
+    document.getElementById('kpiPendingAmount').innerText = `฿${pendingSum.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+    document.getElementById('kpiApprovedCount').innerHTML = `${approvedList.length} <span class="fs-6 fw-normal text-muted">รายการ</span>`;
+    document.getElementById('kpiApprovedAmount').innerText = `฿${approvedSum.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+}
+
+function filterTable(status, btn) {
+    currentFilter = status;
+    const btns = btn.parentElement.querySelectorAll('button');
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTable();
+}
+
+function openReviewModal(claimId) {
+    const claim = claimsData.find(c => c.id === claimId);
+    if (!claim) return;
+    currentReviewClaim = claim;
+
+    document.getElementById('modalTitle').innerHTML = `<i class="bi bi-shield-check me-2"></i>พิจารณาอนุมัติใบขอเบิก #${claim.claimCode} (${claim.date})`;
+    document.getElementById('modalOfficer').innerText = claim.officer + ' (' + claim.position + ')';
+    document.getElementById('modalVehicle').innerText = claim.vehicle;
+    document.getElementById('modalAmount').innerText = `฿${claim.totalAmount.toFixed(2)}`;
+    document.getElementById('modalPurpose').innerText = claim.purpose;
+
+    // Render Waypoints
+    const wpList = document.getElementById('modalWaypointsList');
+    wpList.innerHTML = '';
+    claim.waypoints.forEach(wp => {
+        const item = document.createElement('div');
+        item.className = 'list-group-item d-flex justify-content-between align-items-center py-2';
+        item.innerHTML = `
+            <div>
+                <span class="badge bg-primary me-2">จุดที่ ${wp.step}</span>
+                <strong>${wp.name}</strong>
+                <div class="small text-muted font-monospace"><i class="bi bi-clock me-1"></i>${wp.time} น. | พิกัด GPS: (${wp.lat.toFixed(4)}, ${wp.lng.toFixed(4)})</div>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success"><i class="bi bi-check-circle-fill me-1"></i>GPS ผ่าน</span>
+        `;
+        wpList.appendChild(item);
+    });
+
+    const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+    modal.show();
+
+    // Init Map after modal shown
+    setTimeout(() => {
+        initModalMap(claim.waypoints);
+    }, 300);
+}
+
+function initModalMap(waypoints) {
+    if (leafletMap) {
+        leafletMap.remove();
+    }
+    const center = [waypoints[0].lat, waypoints[0].lng];
+    leafletMap = L.map('interactiveMap').setView(center, 11);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(leafletMap);
+
+    const latlngs = [];
+    waypoints.forEach(wp => {
+        latlngs.push([wp.lat, wp.lng]);
+        const marker = L.marker([wp.lat, wp.lng]).addTo(leafletMap);
+        marker.bindPopup(`<b>จุดที่ ${wp.step}: ${wp.name}</b><br>เวลา: ${wp.time} น.<br>พิกัดดาวเทียม: ${wp.lat}, ${wp.lng}`);
+    });
+
+    if (latlngs.length > 1) {
+        const polyline = L.polyline(latlngs, { color: '#008751', weight: 4, opacity: 0.8 }).addTo(leafletMap);
+        leafletMap.fitBounds(polyline.getBounds(), { padding: [30, 30] });
+    }
+}
+
+function approveCurrentClaim() {
+    if (!currentReviewClaim) return;
+    currentReviewClaim.status = 'approved';
+    currentReviewClaim.approvedBy = 'ผู้จัดการ สกต.กทม.';
+    bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+
+    Swal.fire({
+        icon: 'success',
+        title: 'อนุมัติเรียบร้อยแล้ว!',
+        text: `อนุมัติคำขอ #${currentReviewClaim.claimCode} จำนวนเงิน ฿${currentReviewClaim.totalAmount.toFixed(2)} บาท บันทึกลงบัญชีค่าใช้จ่ายอัตโนมัติแล้ว`,
+        confirmButtonColor: '#008751'
+    });
+
+    renderTable();
+}
+
+function rejectCurrentClaim() {
+    if (!currentReviewClaim) return;
+    currentReviewClaim.status = 'rejected';
+    currentReviewClaim.approvedBy = 'ส่งกลับแก้ไข';
+    bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'ปฏิเสธคำขอเบิก',
+        text: `ได้ส่งคำขอ #${currentReviewClaim.claimCode} กลับไปยังผู้ขอเพื่อตรวจสอบเอกสารใหม่เรียบร้อยแล้ว`,
+        confirmButtonColor: '#dc3545'
+    });
+
+    renderTable();
+}
+
+function viewVoucher(claimId) {
+    const triggerTab = document.querySelector('#tab-voucher-tab');
+    bootstrap.Tab.getInstance(triggerTab) || new bootstrap.Tab(triggerTab);
+    triggerTab.click();
+}
+
+function updateSimCalc() {
+    const isDistance = document.getElementById('simTypeDistance').checked;
+    document.getElementById('simDistanceSection').style.display = isDistance ? 'block' : 'none';
+    document.getElementById('simZoneSection').style.display = isDistance ? 'none' : 'block';
+
+    if (isDistance) {
+        const km = parseFloat(document.getElementById('simKmInput').value) || 0;
+        const fuel = km * 4.00;
+        const wear = km * 1.00;
+        const total = fuel + wear;
+
+        document.getElementById('simRowFuel').style.display = 'flex';
+        document.getElementById('simRowWear').style.display = 'flex';
+        document.getElementById('simDisplayFuel').innerText = `฿${fuel.toFixed(2)}`;
+        document.getElementById('simDisplayWear').innerText = `฿${wear.toFixed(2)}`;
+        document.getElementById('simDisplayTotal').innerText = `฿${total.toFixed(2)}`;
+    } else {
+        const zoneVal = parseFloat(document.getElementById('simZoneSelect').value) || 0;
+        document.getElementById('simRowFuel').style.display = 'none';
+        document.getElementById('simRowWear').style.display = 'none';
+        document.getElementById('simDisplayTotal').innerText = `฿${zoneVal.toFixed(2)}`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderTable();
+    updateSimCalc();
+});
+</script>
+</body>
+</html>
