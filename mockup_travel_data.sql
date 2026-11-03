@@ -2,19 +2,83 @@
 -- สกต.กทม. (สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด)
 -- ระบบบันทึกการเดินทาง (GPS & AI Verification)
 -- ไฟล์: mockup_travel_data.sql
--- คำอธิบาย: Mockup Data สำหรับนำเสนอคณะกรรมการบริหาร (5 วัน สุ่มไม่เท่ากัน วันละ <= 10 จุด)
+-- คำอธิบาย: สคีมาตาราง + Mockup Data สำหรับนำเสนอคณะกรรมการบริหาร (5 วัน รวม 32 จุดแวะ)
 -- ==============================================================================
 
--- ตรวจสอบและสร้างตาราง (ตามสคีมาของระบบ travel)
--- หมายเหตุ: หากมีตารางอยู่แล้ว คำสั่ง INSERT ด้านล่างสามารถรันเพื่อเพิ่มข้อมูลจำลองได้ทันที
-
--- 1. ล้างข้อมูลเก่าของ mockup (ถ้าต้องการ)
--- DELETE FROM travel_claims WHERE trip_id IN (101, 102, 103, 104, 105);
--- DELETE FROM travel_waypoints WHERE trip_id IN (101, 102, 103, 104, 105);
--- DELETE FROM travel_trips WHERE trip_id IN (101, 102, 103, 104, 105);
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- -----------------------------------------------------------------------------
--- ข้อมูลการเดินทางหลัก (travel_trips) 5 วัน
+-- 1. สร้างตาราง travel_trips
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `travel_trips` (
+    `trip_id` int(11) NOT NULL AUTO_INCREMENT,
+    `trip_code` varchar(50) DEFAULT NULL,
+    `user_id` int(11) DEFAULT 1,
+    `officer_name` varchar(255) DEFAULT NULL,
+    `officer_position` varchar(255) DEFAULT NULL,
+    `vehicle_plate` varchar(50) DEFAULT NULL,
+    `trip_date` date DEFAULT NULL,
+    `start_time` time DEFAULT NULL,
+    `end_time` time DEFAULT NULL,
+    `start_location` varchar(255) DEFAULT NULL,
+    `end_location` varchar(255) DEFAULT NULL,
+    `purpose` text DEFAULT NULL,
+    `total_waypoints` int(11) DEFAULT 0,
+    `total_distance_km` decimal(10,2) DEFAULT 0.00,
+    `status` varchar(50) DEFAULT 'approved',
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`trip_id`),
+    UNIQUE KEY `uk_trip_code` (`trip_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 2. สร้างตาราง travel_waypoints
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `travel_waypoints` (
+    `waypoint_id` int(11) NOT NULL AUTO_INCREMENT,
+    `trip_id` int(11) NOT NULL,
+    `step_no` int(11) NOT NULL,
+    `point_type` varchar(50) DEFAULT 'waypoint',
+    `location_name` varchar(255) DEFAULT NULL,
+    `latitude` decimal(10,6) DEFAULT NULL,
+    `longitude` decimal(10,6) DEFAULT NULL,
+    `distance_km` decimal(10,2) DEFAULT 0.00,
+    `action_time` datetime DEFAULT NULL,
+    `objective` text DEFAULT NULL,
+    `is_gps_verified` tinyint(1) DEFAULT 1,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`waypoint_id`),
+    KEY `idx_trip_id` (`trip_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 3. สร้างตาราง travel_claims
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `travel_claims` (
+    `claim_id` int(11) NOT NULL AUTO_INCREMENT,
+    `trip_id` int(11) NOT NULL,
+    `user_id` int(11) DEFAULT 1,
+    `claim_type` varchar(50) DEFAULT 'distance',
+    `rate_id` int(11) DEFAULT 1,
+    `distance_km` decimal(10,2) DEFAULT 0.00,
+    `fuel_rate` decimal(10,2) DEFAULT 4.00,
+    `wear_rate` decimal(10,2) DEFAULT 1.00,
+    `fuel_amount` decimal(10,2) DEFAULT 0.00,
+    `wear_amount` decimal(10,2) DEFAULT 0.00,
+    `total_amount` decimal(10,2) DEFAULT 0.00,
+    `claim_status` varchar(50) DEFAULT 'approved',
+    `approved_by` varchar(255) DEFAULT NULL,
+    `approved_at` datetime DEFAULT NULL,
+    `approver_note` text DEFAULT NULL,
+    `remark` text DEFAULT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`claim_id`),
+    KEY `idx_trip_id` (`trip_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 4. ข้อมูลการเดินทางหลัก (travel_trips) 5 วัน
 -- -----------------------------------------------------------------------------
 INSERT INTO travel_trips (
     trip_id, trip_code, user_id, officer_name, officer_position, 
@@ -32,7 +96,7 @@ ON DUPLICATE KEY UPDATE
     status = VALUES(status);
 
 -- -----------------------------------------------------------------------------
--- ข้อมูลจุดแวะและพิกัด GPS (travel_waypoints) รวม 32 จุด
+-- 5. ข้อมูลจุดแวะและพิกัด GPS (travel_waypoints) รวม 32 จุด
 -- -----------------------------------------------------------------------------
 INSERT INTO travel_waypoints (
     trip_id, step_no, point_type, location_name, latitude, longitude, 
@@ -81,7 +145,7 @@ INSERT INTO travel_waypoints (
 (105, 5, 'checkout', 'สำนักงาน สกต.กทม. (จุดสิ้นสุด/เช็คเอาต์)', 13.756300, 100.501800, 40.70, '2026-11-06 16:45:00', 'เช็คเอาต์ปิดรอบสัปดาห์ นำส่งใบเดินทางและรายงานสรุป 5 วัน ต่อผู้บริหาร', 1, '2026-11-06 16:45:00');
 
 -- -----------------------------------------------------------------------------
--- ข้อมูลการเบิกจ่ายค่าเดินทาง (travel_claims)
+-- 6. ข้อมูลการเบิกจ่ายค่าเดินทาง (travel_claims)
 -- -----------------------------------------------------------------------------
 INSERT INTO travel_claims (
     claim_id, trip_id, user_id, claim_type, rate_id, 
@@ -96,3 +160,5 @@ INSERT INTO travel_claims (
 ON DUPLICATE KEY UPDATE 
     total_amount = VALUES(total_amount),
     claim_status = VALUES(claim_status);
+
+SET FOREIGN_KEY_CHECKS = 1;

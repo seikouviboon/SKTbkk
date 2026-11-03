@@ -8,17 +8,65 @@
 
 session_start();
 
-// ตรวจสอบสิทธิ์การเข้าใช้งาน (เฉพาะ Admin / ผู้จัดการ / Super Admin / ประธาน สกต.)
-if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'] ?? '', ['admin', 'superadmin', 'skt01', 'manager'])) {
-    // หากเข้าใช้งานโดยไม่ได้ล็อกอิน หรือไม่มีสิทธิ์
+// ตรวจสอบสิทธิ์การเข้าใช้งาน (รองรับตัวแปร Session ทุกรูปแบบของระบบ สกต.)
+$user_role = $_SESSION['user']['role'] ?? $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
+$user_name = $_SESSION['user']['name'] ?? $_SESSION['name'] ?? $_SESSION['user_name'] ?? 'ผู้จัดการ สกต.กทม.';
+$user_id   = $_SESSION['user']['id'] ?? $_SESSION['user_id'] ?? 1;
+
+if (empty($user_role) || !in_array($user_role, ['admin', 'superadmin', 'skt01', 'manager'])) {
     header('Location: https://sktbkk.seikouedu.com/index.php');
     exit;
 }
 
-// โหลดการเชื่อมต่อฐานข้อมูล
-require_once __DIR__ . '/../config/database.php'; // หรือไฟล์ db_connect ของระบบ
+$current_user = [
+    'id' => $user_id,
+    'username' => $_SESSION['username'] ?? 'admin',
+    'role' => $user_role,
+    'name' => $user_name
+];
 
-$current_user = $_SESSION['user'];
+// โหลดการเชื่อมต่อฐานข้อมูลแบบปลอดภัย
+$pdo = null;
+$possible_db_files = [
+    __DIR__ . '/../config/database.php',
+    __DIR__ . '/../config.php',
+    __DIR__ . '/../includes/db.php',
+    __DIR__ . '/../db.php'
+];
+foreach ($possible_db_files as $f) {
+    if (file_exists($f)) {
+        require_once $f;
+        break;
+    }
+}
+
+if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
+    $pdo = $GLOBALS['pdo'];
+} elseif (isset($GLOBALS['db']) && $GLOBALS['db'] instanceof PDO) {
+    $pdo = $GLOBALS['db'];
+} elseif (isset($GLOBALS['conn']) && $GLOBALS['conn'] instanceof PDO) {
+    $pdo = $GLOBALS['conn'];
+} elseif (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER')) {
+    $pass = defined('DB_PASS') ? DB_PASS : (defined('DB_PASSWORD') ? DB_PASSWORD : '');
+    try {
+        $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4', DB_USER, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
+    } catch (Exception $e) {}
+}
+
+// ตรวจสอบว่าตาราง travel_claims มีหรือยัง ถ้ายังไม่มีให้รัน install อัตโนมัติทันที
+if ($pdo) {
+    try {
+        $pdo->query('SELECT 1 FROM travel_claims LIMIT 1');
+    } catch (Exception $e) {
+        if (file_exists(__DIR__ . '/install.php')) {
+            require_once __DIR__ . '/install.php';
+            exit;
+        }
+    }
+}
 $filter_status = $_GET['status'] ?? 'all';
 $filter_month  = $_GET['month'] ?? date('Y-m');
 

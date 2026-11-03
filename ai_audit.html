@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ตรวจสอบสต็อกด้วย AI (Gemini Vision) - สกต.กทม.</title>
+    
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-baac: #008751; /* สีเขียว ธ.ก.ส. */
+            --primary-dark: #005f38;
+            --accent-gold: #f59e0b;
+            --scb-purple: #4e2a84;  /* สีม่วง SCB / แม่มณี */
+        }
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .navbar-baac {
+            background: linear-gradient(135deg, var(--primary-baac) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .card-custom {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+        }
+        .card-custom:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .btn-baac {
+            background-color: var(--primary-baac);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .btn-baac:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+        .btn-scb {
+            background-color: var(--scb-purple);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .btn-scb:hover {
+            background-color: #3b1f66;
+            color: white;
+        }
+        .badge-role {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .text-baac { color: var(--primary-baac); }
+        .text-scb { color: var(--scb-purple); }
+        .rice-card {
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .rice-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-baac);
+        }
+        .rice-card.selected {
+            border-color: var(--primary-baac);
+            background-color: #f0fdf4;
+        }
+        .alert-banner {
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-baac sticky-top py-2">
+    <div class="container-fluid px-3">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="https://sktbkk.seikouedu.com/dashboard.php">
+            <span class="fs-4">🌾</span>
+            <div>
+                <span class="d-block lh-1 fs-5">สกต.กทม.</span>
+                <small class="text-white-50" style="font-size: 0.72rem; font-weight: normal;">ระบบจัดการข้าวสาร & ฝากขาย</small>
+            </div>
+        </a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+
+                            <!-- ======================================================== -->
+                <!-- 1. สำหรับหน้าร้านค้า (Staff / ร้านตัวแทนฝากขาย) -->
+                <!-- มีปุ่ม: บันทึกขาย, ตรวจนับสต็อก AI, ระบบส่งข้าว, ปิดสิ้นวันส่งบัญชี -->
+                <!-- (ตัดเฉพาะปุ่ม 'เดินทางปฏิบัติงาน' ออกตามคำสั่ง) -->
+                <!-- ======================================================== -->
+                <li class="nav-item">
+                    <a class="nav-link " href="https://sktbkk.seikouedu.com/pos.php">
+                        <i class="bi bi-cart-check-fill me-1"></i> บันทึกขาย (POS)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active fw-bold" href="https://sktbkk.seikouedu.com/ai_audit.php">
+                        <i class="bi bi-camera-fill me-1"></i> ถ่ายรูปนับสต็อก (AI)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="https://sktbkk.seikouedu.com/transfers.php">
+                        <i class="bi bi-arrow-left-right me-1"></i> โอนย้ายสต็อก (ส่งข้าว)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="https://sktbkk.seikouedu.com/reconcile.php">
+                        <i class="bi bi-patch-check-fill me-1"></i> ปิดสิ้นวันส่งบัญชี (แม่มณี)
+                    </a>
+                </li>
+
+            
+            </ul>
+
+            <div class="d-flex align-items-center gap-2 text-white">
+                <!-- เมนูดรอปดาวน์คู่มือการใช้งานระบบแยกตามทุกระบบ (PDF) -->
+                <div class="dropdown">
+                    <button class="btn btn-warning btn-sm fw-bold dropdown-toggle d-flex align-items-center gap-1 shadow-sm px-2 py-1" type="button" id="manualDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="เปิดดูคู่มือการปฏิบัติงานแยกตามระบบ (PDF)">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <span class="d-none d-md-inline">คู่มือระบบ</span>
+                        <span class="badge bg-danger text-white rounded-pill px-1 ms-1" style="font-size: 0.68rem;">PDF</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2 border-0" aria-labelledby="manualDropdown" style="min-width: 340px; max-height: 520px; overflow-y: auto; font-size: 0.88rem;">
+                                                    <!-- สำหรับพนักงานร้านค้าตัวแทน -->
+                            <li class="dropdown-header text-baac fw-bold border-bottom pb-2 mb-1">
+                                <i class="bi bi-shop me-1"></i> คู่มือปฏิบัติงานหน้าร้านค้าตัวแทน (PDF)
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="https://sktbkk.seikouedu.com/manuals/manual_pos.pdf" target="_blank">
+                                    <span class="text-success fs-5">🛒</span>
+                                    <div>
+                                        <strong class="text-dark d-block">1. บันทึกการขายหน้าร้าน (POS) & ตัดสต็อก</strong>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">เปิดบิลขาย, สแกน QR SCB แม่มณี, ตัดสต็อกอัตโนมัติ</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="https://sktbkk.seikouedu.com/manuals/manual_ai_audit.pdf" target="_blank">
+                                    <span class="text-primary fs-5">🤖</span>
+                                    <div>
+                                        <strong class="text-dark d-block">2. ตรวจนับสต็อกอัจฉริยะ (AI Vision)</strong>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">ถ่ายรูปกองข้าวนับถุงอัตโนมัติด้วย AI สิ้นวัน</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="https://sktbkk.seikouedu.com/manuals/manual_transfers.pdf" target="_blank">
+                                    <span class="text-primary fs-5">📦</span>
+                                    <div>
+                                        <strong class="text-dark d-block">3. การรับและโอนย้ายสต็อกข้าวสาร (ส่งข้าว)</strong>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">ตรวจสอบและรับข้าวสารเข้าหน้าร้าน</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="https://sktbkk.seikouedu.com/manuals/manual_reconcile.pdf" target="_blank">
+                                    <span class="text-info fs-5">📊</span>
+                                    <div>
+                                        <strong class="text-dark d-block">4. การปิดยอดสิ้นวันและการส่งข้อมูลบัญชี</strong>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">กระทบยอดสแกน QR แม่มณี SCB</small>
+                                    </div>
+                                </a>
+                            </li>
+                                            </ul>
+                </div>
+
+                <div class="text-end d-none d-sm-block">
+                    <div class="fw-semibold lh-1" style="font-size: 0.9rem;">พนักงาน ธกส สาขาทุ่งครุ</div>
+                    <small class="text-white-50" style="font-size: 0.75rem;">
+                        ธกส สาขาทุ่งครุ                        <span class="badge bg-light text-dark badge-role ms-1">พนักงานขาย</span>
+                    </small>
+                </div>
+                <a href="https://sktbkk.seikouedu.com/logout.php" class="btn btn-outline-light btn-sm rounded-pill px-3" title="ออกจากระบบ">
+                    <i class="bi bi-box-arrow-right me-1"></i> ออก
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid px-3 px-lg-4 py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="bi bi-robot text-baac me-2"></i>ระบบ AI ตรวจสอบสต็อกข้าวสาร (Gemini Vision)</h4>
+            <p class="text-muted small mb-0">เปรียบเทียบจำนวนถุงแยกขนาด (1 กก., 5 กก., 15 กก.) ในระบบ กับจำนวนที่ AI นับได้จากภาพถ่ายจริง</p>
+        </div>
+        <div>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2">
+                <i class="bi bi-cpu me-1"></i> โมเดล: gemini-3.8-flash            </span>
+        </div>
+    </div>
+
+    <!-- ส่วนอัปโหลดรูปถ่ายสำหรับ Staff / Admin (ผู้บริหารดูได้อย่างเดียว) -->
+            <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="card card-custom p-4 bg-white h-100">
+                    <h5 class="fw-bold text-baac mb-3"><i class="bi bi-camera me-1"></i> อัปโหลด / ถ่ายรูปกองข้าวสิ้นวัน</h5>
+
+                    <form id="formAiAudit" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">จุดขาย / ร้านค้าตัวแทน:</label>
+                                                            <input type="hidden" name="store_id" value="4">
+                                <div class="form-control bg-light fw-semibold">ธกส สาขาทุ่งครุ</div>
+                                                    </div>
+
+                        <!-- แสดงสต็อกคงเหลือในระบบ แยกขนาด 1, 5, 15 กก. และยอดรวมชัดเจน -->
+                        <div class="p-3 bg-light rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                                <span class="fw-semibold text-muted"><i class="bi bi-box-seam me-1"></i> สต็อกคงเหลือในระบบขณะนี้:</span>
+                                <span class="badge bg-success fs-6 px-3 py-1">รวมทั้งหมด 57 ถุง</span>
+                            </div>
+                            <div class="row g-2 text-center">
+                                <div class="col-4">
+                                    <div class="p-2 bg-white rounded border">
+                                        <small class="text-muted d-block">ขนาด 1 กก.</small>
+                                        <strong class="fs-5 text-baac">19</strong> <small class="text-muted">ถุง</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-white rounded border">
+                                        <small class="text-muted d-block">ขนาด 5 กก.</small>
+                                        <strong class="fs-5 text-primary">28</strong> <small class="text-muted">ถุง</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-white rounded border">
+                                        <small class="text-muted d-block">ขนาด 15 กก.</small>
+                                        <strong class="fs-5 text-warning-emphasis">10</strong> <small class="text-muted">ถุง</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">เลือกภาพถ่ายกองข้าวหน้าร้าน (หรือเปิดกล้องมือถือ):</label>
+                            <input type="file" name="stock_photo" id="stock_photo" class="form-control" accept="image/*" capture="environment" required onchange="previewStockImage(this)">
+                            <small class="text-muted d-block mt-1">แนะนำ: ถ่ายให้เห็นกองข้าวทั้ง 3 ขนาด (1, 5, 15 กก.) อย่างชัดเจนและมีแสงสว่างเพียงพอ</small>
+                        </div>
+
+                        <!-- ตัวอย่างภาพก่อนส่ง -->
+                        <div id="previewContainer" class="mb-3 text-center d-none">
+                            <img id="imgPreview" src="" alt="ตัวอย่างภาพ" class="img-fluid rounded border shadow-sm" style="max-height: 220px;">
+                        </div>
+
+                        <button type="submit" class="btn btn-baac w-100 py-2 fs-6 fw-bold" id="btnUploadAudit">
+                            <i class="bi bi-magic me-1"></i> ส่งรูปให้ AI ตรวจนับจำนวนถุงข้าว
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- กล่องแสดงผลการวิเคราะห์สด เทียบรายขนาด 1, 5, 15 กก. -->
+            <div class="col-lg-6">
+                <div class="card card-custom p-4 bg-white h-100" id="resultCard">
+                    <h5 class="fw-bold text-muted mb-3"><i class="bi bi-clipboard-data me-1"></i> ผลการประเมินโดย AI (เทียบรายขนาด)</h5>
+
+                    <div id="aiEmptyState" class="text-center py-5 text-muted">
+                        <i class="bi bi-image fs-1 d-block mb-2 text-secondary"></i>
+                        <span>ยังไม่มีผลการวิเคราะห์ กรุณาถ่ายภาพและกดปุ่มส่งตรวจ</span>
+                    </div>
+
+                    <div id="aiResultState" class="d-none">
+                        <div class="text-center mb-3">
+                            <span id="badgeAuditStatus" class="badge fs-6 px-3 py-2">ปกติ</span>
+                        </div>
+
+                        <!-- ตารางเปรียบเทียบรายขนาด 1, 5, 15 กก. -->
+                        <div class="table-responsive mb-3">
+                            <table class="table table-bordered table-sm align-middle text-center mb-0">
+                                <thead class="table-light small">
+                                    <tr>
+                                        <th class="text-start">ขนาดถุงข้าว</th>
+                                        <th>สต็อกในระบบ</th>
+                                        <th class="bg-success-subtle text-success">AI นับได้จากรูป</th>
+                                        <th>ส่วนต่าง</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-start fw-semibold">ข้าวถุง 1 กก.</td>
+                                        <td><span id="resExp1">0</span> ถุง</td>
+                                        <td class="fw-bold text-baac"><span id="resAi1">0</span> ถุง</td>
+                                        <td id="resDiff1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start fw-semibold">ข้าวถุง 5 กก.</td>
+                                        <td><span id="resExp5">0</span> ถุง</td>
+                                        <td class="fw-bold text-baac"><span id="resAi5">0</span> ถุง</td>
+                                        <td id="resDiff5">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start fw-semibold">ข้าวถุง 15 กก.</td>
+                                        <td><span id="resExp15">0</span> ถุง</td>
+                                        <td class="fw-bold text-baac"><span id="resAi15">0</span> ถุง</td>
+                                        <td id="resDiff15">-</td>
+                                    </tr>
+                                    <tr class="table-secondary fw-bold">
+                                        <td class="text-start">รวมทั้งหมด</td>
+                                        <td><span id="resSystemCount">0</span> ถุง</td>
+                                        <td class="text-baac fs-5"><span id="resAiCount">0</span> ถุง</td>
+                                        <td id="resDiffTotal">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="alert alert-secondary py-2 small mb-0">
+                            <strong>คำวิเคราะห์จาก Gemini:</strong>
+                            <p class="mb-0 mt-1" id="resAiNotes">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <!-- ตารางประวัติการตรวจสอบย้อนหลัง -->
+    <div class="card card-custom p-4 bg-white">
+        <h5 class="fw-bold mb-3"><i class="bi bi-clock-history me-2 text-baac"></i>ประวัติการถ่ายรูปตรวจนับสต็อกย้อนหลัง</h5>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small">
+                    <tr>
+                        <th>วันที่ / เวลา</th>
+                        <th>ร้านค้า</th>
+                        <th class="text-center">รูปถ่าย</th>
+                        <th class="text-center">สต็อกในระบบ (1 / 5 / 15 กก.)</th>
+                        <th class="text-center">AI นับได้ (1 / 5 / 15 กก.)</th>
+                        <th class="text-center">ผลต่างรวม</th>
+                        <th class="text-center">สถานะความเสี่ยง</th>
+                        <th>คำอธิบายของ AI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                                                                        <tr>
+                                <td class="small text-nowrap">03/11/2026 12:09</td>
+                                <td><strong>ธกส สาขาทุ่งครุ</strong></td>
+                                <td class="text-center">
+                                    <a href="https://sktbkk.seikouedu.com/uploads/stock_photos/audit_4_20261103_120858.png" target="_blank">
+                                        <img src="https://sktbkk.seikouedu.com/uploads/stock_photos/audit_4_20261103_120858.png" alt="ภาพกองข้าว" class="rounded border" style="width: 50px; height: 50px; object-fit: cover;">
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <div class="fw-bold">57 ถุง</div>
+                                    <small class="text-muted">(19 / 28 / 10)</small>
+                                </td>
+                                <td class="text-center">
+                                    <div class="fw-bold text-baac">57 ถุง</div>
+                                    <small class="text-muted">(19 / 28 / 10)</small>
+                                </td>
+                                <td class="text-center">
+                                                                            <span class="badge bg-success">ตรงกัน</span>
+                                                                    </td>
+                                <td class="text-center">
+                                                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>ปกติ</span>
+                                                                    </td>
+                                <td class="small text-muted" style="max-width: 300px;">วิเคราะห์ AI: เกิดข้อผิดพลาดในการเชื่อมต่อ cURL: Operation timed out after 60002 milliseconds with 0 bytes received</td>
+                            </tr>
+                                                            </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function previewStockImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imgPreview').src = e.target.result;
+            document.getElementById('previewContainer').classList.remove('d-none');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function formatDiffBadge(diff) {
+    if (diff < 0) return `<span class="badge bg-danger">${diff} ถุง</span>`;
+    if (diff > 0) return `<span class="badge bg-info">+${diff} ถุง</span>`;
+    return `<span class="badge bg-success">ตรงกัน</span>`;
+}
+
+document.getElementById('formAiAudit')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnUploadAudit');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> AI Gemini กำลังวิเคราะห์รูปกองข้าว (1, 5, 15 กก.)...';
+
+    const formData = new FormData(this);
+
+    fetch('https://sktbkk.seikouedu.com/api/upload_ai_audit.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-magic me-1"></i> ส่งรูปให้ AI ตรวจนับจำนวนถุงข้าว';
+
+        if (data.success) {
+            document.getElementById('aiEmptyState').classList.add('d-none');
+            document.getElementById('aiResultState').classList.remove('d-none');
+
+            document.getElementById('resExp1').innerText = data.expected_1kg;
+            document.getElementById('resExp5').innerText = data.expected_5kg;
+            document.getElementById('resExp15').innerText = data.expected_15kg;
+            document.getElementById('resSystemCount').innerText = data.expected_count;
+
+            document.getElementById('resAi1').innerText = data.ai_1kg;
+            document.getElementById('resAi5').innerText = data.ai_5kg;
+            document.getElementById('resAi15').innerText = data.ai_15kg;
+            document.getElementById('resAiCount').innerText = data.detected_count;
+
+            document.getElementById('resDiff1').innerHTML = formatDiffBadge(data.ai_1kg - data.expected_1kg);
+            document.getElementById('resDiff5').innerHTML = formatDiffBadge(data.ai_5kg - data.expected_5kg);
+            document.getElementById('resDiff15').innerHTML = formatDiffBadge(data.ai_15kg - data.expected_15kg);
+            document.getElementById('resDiffTotal').innerHTML = formatDiffBadge(data.discrepancy);
+
+            document.getElementById('resAiNotes').innerText = data.ai_notes;
+
+            const badge = document.getElementById('badgeAuditStatus');
+            if (data.audit_status === 'fraud_flagged') {
+                badge.className = 'badge bg-danger fs-6 px-3 py-2';
+                badge.innerHTML = '<i class="bi bi-shield-x me-1"></i> ตรวจพบความเสี่ยงทุจริต (จำนวนข้าวจริงน้อยกว่าในระบบ)';
+            } else if (data.audit_status === 'warning') {
+                badge.className = 'badge bg-warning text-dark fs-6 px-3 py-2';
+                badge.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i> แจ้งเตือน: ยอดข้าวในรูปกับระบบมีความคลาดเคลื่อน';
+            } else {
+                badge.className = 'badge bg-success fs-6 px-3 py-2';
+                badge.innerHTML = '<i class="bi bi-check-circle me-1"></i> จำนวนข้าวปกติ สอดคล้องกับระบบ';
+            }
+
+            Swal.fire({
+                icon: data.audit_status === 'normal' ? 'success' : 'warning',
+                title: 'AI ประมวลผลเสร็จสิ้น',
+                html: `AI นับรวมได้ <strong>${data.detected_count} ถุง</strong> (1กก:${data.ai_1kg}, 5กก:${data.ai_5kg}, 15กก:${data.ai_15kg})<br>เทียบกับในระบบ <strong>${data.expected_count} ถุง</strong>`,
+                confirmButtonColor: '#008751'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: data.message || 'ไม่สามารถวิเคราะห์ภาพได้',
+                confirmButtonColor: '#d33'
+            });
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-magic me-1"></i> ส่งรูปให้ AI ตรวจนับจำนวนถุงข้าว';
+        Swal.fire({
+            icon: 'error',
+            title: 'ข้อผิดพลาดระบบ',
+            text: err.message,
+            confirmButtonColor: '#d33'
+        });
+    });
+});
+</script>
+
+<footer class="mt-auto py-3 bg-white border-top text-center text-muted">
+    <div class="container">
+        <small>
+            &copy; 2026 <strong>สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (สกต.กทม.)</strong> | ระบบบริหารจัดการสต็อกและจุดขายข้าวสาร
+        </small>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 for beautiful popups -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

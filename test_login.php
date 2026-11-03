@@ -17,7 +17,12 @@ $_SESSION['user'] = [
     'email' => 'admin@sktbkk.com',
     'logged_in_time' => date('Y-m-d H:i:s')
 ];
+$_SESSION['role'] = 'admin';
+$_SESSION['username'] = 'admin';
+$_SESSION['name'] = 'ผู้จัดการ สกต.กทม.';
+$_SESSION['store_id'] = 4;
+$_SESSION['store_name'] = 'สำนักงาน สกต.กทม.';
 
-// ส่งตรงเข้าสู่หน้าหลักระบบบันทึกการเดินทางทันที
-header('Location: index.php?mode=testing_admin_bypass');
+// ส่งตรงเข้าสู่หน้าศูนย์พิจารณาอนุมัติทันที
+header('Location: approvals.php');
 exit;

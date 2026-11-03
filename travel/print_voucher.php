@@ -7,12 +7,40 @@
  */
 
 session_start();
-if (!isset($_SESSION['user'])) {
+$user_role = $_SESSION['user']['role'] ?? $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
+if (empty($user_role) && empty($_SESSION['username'])) {
     header('Location: https://sktbkk.seikouedu.com/index.php');
     exit;
 }
 
-require_once __DIR__ . '/../config/database.php';
+$pdo = null;
+$possible_db_files = [
+    __DIR__ . '/../config/database.php',
+    __DIR__ . '/../config.php',
+    __DIR__ . '/../includes/db.php',
+    __DIR__ . '/config/database.php'
+];
+foreach ($possible_db_files as $f) {
+    if (file_exists($f)) {
+        require_once $f;
+        break;
+    }
+}
+if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
+    $pdo = $GLOBALS['pdo'];
+} elseif (isset($GLOBALS['db']) && $GLOBALS['db'] instanceof PDO) {
+    $pdo = $GLOBALS['db'];
+} elseif (isset($GLOBALS['conn']) && $GLOBALS['conn'] instanceof PDO) {
+    $pdo = $GLOBALS['conn'];
+} elseif (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER')) {
+    $pass = defined('DB_PASS') ? DB_PASS : (defined('DB_PASSWORD') ? DB_PASSWORD : '');
+    try {
+        $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4', DB_USER, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
+    } catch (Exception $e) {}
+}
 
 $claim_id = isset($_GET['claim_id']) ? intval($_GET['claim_id']) : 0;
 if (!$claim_id) {
