@@ -28,7 +28,7 @@ $current_page = basename($_SERVER['PHP_SELF'] ?? '');
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark navbar-baac sticky-top py-2">
     <div class="container-fluid px-3">
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="https://sktbkk.seikouedu.com/dashboard.php">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="<?= $is_store_staff ? 'https://sktbkk.seikouedu.com/pos.php' : 'https://sktbkk.seikouedu.com/dashboard.php' ?>">
             <span class="fs-4">🌾</span>
             <div>
                 <span class="d-block lh-1 fs-5">สกต.กทม.</span>
@@ -49,7 +49,7 @@ $current_page = basename($_SERVER['PHP_SELF'] ?? '');
                 <!-- มีปุ่ม: หน้าแรก, บันทึกขาย, ตรวจนับสต็อก AI, ระบบส่งข้าว, ปิดสิ้นวันส่งบัญชี -->
                 <!-- ======================================================== -->
                 <li class="nav-item">
-                    <a class="nav-link <?= ($current_page === 'dashboard.php') ? 'active fw-bold' : '' ?>" href="https://sktbkk.seikouedu.com/dashboard.php">
+                    <a class="nav-link <?= ($current_page === 'pos.php') ? 'active fw-bold' : '' ?>" href="https://sktbkk.seikouedu.com/pos.php">
                         <i class="bi bi-house-door-fill me-1"></i> หน้าแรก
                     </a>
                 </li>
