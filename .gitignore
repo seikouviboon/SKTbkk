@@ -4,6 +4,12 @@ session*.txt
 *.tmp
 *.log
 
+# Inspection & Temporary scrapes
+inspect_*
+server_*.html
+tab_*.html
+get_*.js
+
 # OS generated files
 .DS_Store
 Thumbs.db

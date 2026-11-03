@@ -705,6 +705,13 @@ $_SESSION['name'] = 'ผู้จัดการ สกต.กทม.';
 </head>
 <body>
 <div class="card card-custom p-4 p-md-5 bg-white text-center">
+    <div class="mb-4 text-start">
+        <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-warning btn-sm fw-bold px-3 py-2 shadow-sm d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
+            <i class="bi bi-house-door-fill text-dark"></i>
+            <span class="text-dark">หน้าแรก สกต. (Home)</span>
+        </a>
+    </div>
+
     <div class="fs-1 mb-3"><?= $error ? '⚠️' : '🎉' ?></div>
     <h3 class="fw-bold mb-2 <?= $error ? 'text-danger' : 'text-success' ?>">
         <?= $error ? 'การติดตั้งฐานข้อมูลไม่สำเร็จ' : 'นำเข้าฐานข้อมูล สกต.กทม. เรียบร้อยแล้ว!' ?>
@@ -725,12 +732,37 @@ $_SESSION['name'] = 'ผู้จัดการ สกต.กทม.';
         </div>
     <?php endif; ?>
 
+    <!-- เมนูทางลัดพิเศษ: สำหรับประชุมคณะกรรมการพรุ่งนี้ -->
+    <div class="card p-3 mb-4 bg-light border-0 text-start">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <strong class="text-dark"><i class="bi bi-briefcase-fill text-success me-1"></i> ระบบเตรียมข้อมูลประชุมคณะกรรมการ สกต.กทม.</strong>
+            <span class="badge bg-success">สำคัญ</span>
+        </div>
+        <p class="small text-muted mb-3">
+            จำลองข้อมูลรายงานการเงินประจำเดือน (ยอดขาย ~฿200,000, กำไรสุทธิ ~฿20,400) พร้อมระบบสำรองข้อมูลเดิมอัตโนมัติก่อนทำ และกู้คืนข้อมูลเดิมได้ทันทีหลังประชุมเสร็จ
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="backup_and_mockup_finance.php?action=mockup" class="btn btn-success btn-sm fw-bold px-3 py-2" onclick="return confirm('ยืนยันสร้าง Mock-up การเงินสำหรับประชุมคณะกรรมการ? (ระบบจะสำรองข้อมูลเดิมไว้อัตโนมัติ)')">
+                <i class="bi bi-file-earmark-spreadsheet me-1"></i> นำเข้า Mock-up การเงินประชุมคณะกรรมการ
+            </a>
+            <a href="restore_initial_data.php" class="btn btn-outline-danger btn-sm fw-semibold px-3 py-2">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> คืนค่าข้อมูลเดิม (Restore)
+            </a>
+            <a href="backup_and_mockup_finance.php" class="btn btn-outline-primary btn-sm px-3 py-2">
+                <i class="bi bi-gear-fill me-1"></i> จัดการระบบสำรองข้อมูล
+            </a>
+        </div>
+    </div>
+
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <a href="approvals.php" class="btn btn-baac">
             <i class="bi bi-shield-check me-2"></i>เปิดหน้าศูนย์พิจารณาอนุมัติ (Approvals)
         </a>
+        <a href="../financial_reports.php" class="btn btn-outline-success px-4 py-2" style="border-radius: 10px;">
+            <i class="bi bi-journal-bookmark-fill me-1"></i>รายงานการเงินประจำเดือน
+        </a>
         <a href="../ai_audit.php" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 10px;">
-            <i class="bi bi-robot me-1"></i>ไปหน้าระบบ AI ตรวจสต็อก
+            <i class="bi bi-robot me-1"></i>ไประบบ AI ตรวจสต็อก
         </a>
     </div>
 </div>

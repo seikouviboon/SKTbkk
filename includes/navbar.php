@@ -83,10 +83,31 @@ $current_page = basename($_SERVER['PHP_SELF'] ?? '');
                         <i class="bi bi-grid-fill me-1"></i> ภาพรวม
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-info <?= ($current_page === 'financial_reports.php') ? 'active fw-bold' : '' ?>" href="https://sktbkk.seikouedu.com/financial_reports.php">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-info <?= in_array($current_page, ['financial_reports.php', 'backup_and_mockup_finance.php', 'restore_initial_data.php']) ? 'active fw-bold' : '' ?>" href="#" id="finNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-journal-bookmark-fill me-1"></i> รายงานประจำเดือน
                     </a>
+                    <ul class="dropdown-menu shadow border-0" aria-labelledby="finNavDropdown">
+                        <li>
+                            <a class="dropdown-item py-2" href="https://sktbkk.seikouedu.com/financial_reports.php">
+                                <i class="bi bi-file-earmark-bar-graph text-success me-2"></i>รายงานการเงินประจำเดือน (กตส.)
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="dropdown-header text-muted small fw-semibold">
+                            <i class="bi bi-briefcase me-1"></i>การประชุมคณะกรรมการ สกต.กทม.
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2 text-success fw-semibold" href="https://sktbkk.seikouedu.com/backup_and_mockup_finance.php">
+                                <i class="bi bi-database-gear text-success me-2"></i>จัดการ Mock-up & สำรองข้อมูล
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2 text-danger" href="https://sktbkk.seikouedu.com/restore_initial_data.php">
+                                <i class="bi bi-arrow-counterclockwise text-danger me-2"></i>คืนค่าข้อมูลเดิม (Restore หลังประชุม)
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?= ($current_page === 'pos.php') ? 'active fw-bold' : '' ?>" href="https://sktbkk.seikouedu.com/pos.php">
