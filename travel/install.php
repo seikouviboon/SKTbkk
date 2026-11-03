@@ -58,6 +58,29 @@ $db = get_db_connection();
 $msg = [];
 $error = null;
 
+if (isset($_GET['inspect_db']) && $db instanceof PDO) {
+    $stmt = $db->query("SHOW TABLES");
+    $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $tbl_counts = [];
+    foreach ($tables as $t) {
+        $c = $db->query("SELECT COUNT(*) FROM `{$t}`")->fetchColumn();
+        $tbl_counts[$t] = intval($c);
+    }
+    $fin_source = '';
+    if (file_exists(__DIR__ . '/../financial_reports.php')) {
+        $fin_source = file_get_contents(__DIR__ . '/../financial_reports.php');
+    } elseif (file_exists(__DIR__ . '/financial_reports.php')) {
+        $fin_source = file_get_contents(__DIR__ . '/financial_reports.php');
+    }
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'tables' => $tbl_counts,
+        'financial_reports_len' => strlen($fin_source),
+        'financial_reports_source' => $fin_source
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 function get_table_columns($db, $table) {
     try {
         if ($db instanceof PDO) {
