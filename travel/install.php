@@ -270,9 +270,17 @@ if (!$db) {
             ensure_column($db, 'travel_waypoints', 'action_time', 'datetime DEFAULT NULL');
             ensure_column($db, 'travel_waypoints', 'objective', 'text DEFAULT NULL');
             ensure_column($db, 'travel_waypoints', 'is_gps_verified', 'tinyint(1) DEFAULT 1');
+            ensure_column($db, 'travel_waypoints', 'photo_path', 'varchar(255) DEFAULT NULL');
+            ensure_column($db, 'travel_waypoints', 'ai_place', 'varchar(255) DEFAULT NULL');
             ensure_column($db, 'travel_waypoints', 'created_at', 'datetime DEFAULT CURRENT_TIMESTAMP');
             $msg[] = "ตรวจสอบและอัปเกรดโครงสร้างตาราง travel_waypoints พร้อมใช้งาน";
         }
+
+        // สร้างโฟลเดอร์สำหรับจัดเก็บรูปภาพจุดแวะ GPS
+        $p_dir = __DIR__ . '/../uploads/travel_photos/';
+        if (!file_exists($p_dir)) @mkdir($p_dir, 0777, true);
+        $p_dir_loc = __DIR__ . '/uploads/travel_photos/';
+        if (!file_exists($p_dir_loc)) @mkdir($p_dir_loc, 0777, true);
 
         // =========================================================================
         // 3. ตรวจสอบและปรับปรุงตาราง travel_claims
@@ -457,7 +465,7 @@ if (!$db) {
                 'purpose' => 'สุ่มตรวจมาตรฐานความชื้นและจัดเรียงชั้นวางสินค้า โซนในเมือง-ธนบุรีชั้นใน',
                 'total_waypoints' => 9,
                 'total_distance_km' => 61.40,
-                'status' => 'approved',
+                'status' => 'submitted',
                 'created_at' => '2026-11-05 08:00:00'
             ],
             [
@@ -475,7 +483,7 @@ if (!$db) {
                 'purpose' => 'ตรวจสต็อกสิ้นสัปดาห์และเก็บเงินสดจุดฝากขาย โซนตะวันตก-ปริมณฑล',
                 'total_waypoints' => 5,
                 'total_distance_km' => 69.80,
-                'status' => 'approved',
+                'status' => 'submitted',
                 'created_at' => '2026-11-06 08:30:00'
             ]
         ];
@@ -610,11 +618,11 @@ if (!$db) {
                 'fuel_amount' => 245.60,
                 'wear_amount' => 61.40,
                 'total_amount' => 307.00,
-                'claim_status' => 'approved',
-                'approved_by' => 'ผู้จัดการ สกต.กทม.',
-                'approved_at' => '2026-11-05 18:00:00',
-                'approver_note' => 'ตรวจครบ 8 จุดตรวจตามแผนงานสุ่มตรวจคุณภาพข้าว',
-                'remark' => 'ตรวจครบ 8 จุดตรวจตามแผนงานสุ่มตรวจคุณภาพข้าว'
+                'claim_status' => 'submitted',
+                'approved_by' => null,
+                'approved_at' => null,
+                'approver_note' => null,
+                'remark' => 'รอการพิจารณาอนุมัติการเดินทางและเบิกจ่ายประจำวัน (Day 4)'
             ],
             [
                 'claim_id' => 105,
@@ -628,11 +636,11 @@ if (!$db) {
                 'fuel_amount' => 279.20,
                 'wear_amount' => 69.80,
                 'total_amount' => 349.00,
-                'claim_status' => 'approved',
-                'approved_by' => 'ผู้จัดการ สกต.กทม.',
-                'approved_at' => '2026-11-06 17:15:00',
-                'approver_note' => 'ปิดงวดการเดินทางประจำสัปดาห์ อนุมัติเบิกจ่ายตามระเบียบ',
-                'remark' => 'ปิดงวดการเดินทางประจำสัปดาห์ อนุมัติเบิกจ่ายตามระเบียบ'
+                'claim_status' => 'submitted',
+                'approved_by' => null,
+                'approved_at' => null,
+                'approver_note' => null,
+                'remark' => 'รอการพิจารณาอนุมัติการเดินทางและเบิกจ่ายประจำวัน (Day 5)'
             ]
         ];
 

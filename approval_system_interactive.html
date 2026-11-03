@@ -687,6 +687,11 @@ function renderTable() {
                     <button class="btn ${isPending ? 'btn-success fw-bold' : 'btn-outline-primary'}" onclick="openReviewModal(${c.id})">
                         <i class="bi bi-shield-check me-1"></i>${isPending ? 'ตรวจ & อนุมัติ' : 'ดูหลักฐาน'}
                     </button>
+                    ${isPending ? `
+                    <button class="btn btn-warning fw-bold" onclick="quickDailyApprove(${c.id})" title="อนุมัติทั้งวันในคลิกเดียว">
+                        <i class="bi bi-lightning-charge-fill me-1"></i>⚡ อนุมัติทั้งวัน (1 คลิก)
+                    </button>
+                    ` : ''}
                     ${!isPending ? `
                     <button class="btn btn-outline-secondary" onclick="viewVoucher(${c.id})" title="พิมพ์ใบเบิก">
                         <i class="bi bi-printer"></i>
@@ -698,6 +703,33 @@ function renderTable() {
     });
 
     updateKPIs();
+}
+
+function quickDailyApprove(claimId) {
+    const claim = claimsData.find(c => c.id === claimId);
+    if (!claim) return;
+    Swal.fire({
+        title: 'ยืนยันอนุมัติทั้งวัน?',
+        html: `ต้องการอนุมัติการเดินทางของ <strong>${claim.officer}</strong> ประจำวันที่ ${claim.date} ทั้งหมดในคลิกเดียวใช่หรือไม่?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#008751',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '⚡ ยืนยันอนุมัติทั้งวันทันที',
+        cancelButtonText: 'ยกเลิก'
+    }).then((res) => {
+        if (res.isConfirmed) {
+            claim.status = 'approved';
+            claim.approvedBy = 'ผู้จัดการ สกต.กทม. (อนุมัติรวดเดียวทั้งวัน)';
+            renderTable();
+            Swal.fire({
+                icon: 'success',
+                title: 'อนุมัติเรียบร้อย!',
+                text: `อนุมัติการเดินทางและสั่งจ่ายเงิน ฿${claim.totalAmount.toFixed(2)} เรียบร้อยแล้ว`,
+                confirmButtonColor: '#008751'
+            });
+        }
+    });
 }
 
 function updateKPIs() {
