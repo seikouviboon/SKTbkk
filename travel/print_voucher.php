@@ -48,22 +48,30 @@ if (!$claim_id) {
 }
 
 // ดึงข้อมูลการเบิกจ่าย
-$sql = "
-    SELECT 
-        c.*,
-        t.trip_code, t.trip_date, t.start_time, t.end_time,
-        t.start_location, t.end_location, t.purpose, t.vehicle_plate,
-        t.officer_name, t.officer_position
-    FROM travel_claims c
-    JOIN travel_trips t ON c.trip_id = t.trip_id
-    WHERE c.claim_id = :claim_id
-";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([':claim_id' => $claim_id]);
-$claim = $stmt->fetch(PDO::FETCH_ASSOC);
+$claim = null;
+try {
+    $sql = "
+        SELECT 
+            c.*,
+            t.trip_code, t.trip_date, t.start_time, t.end_time,
+            t.start_location, t.end_location, t.purpose, t.vehicle_plate,
+            t.officer_name, t.officer_position
+        FROM travel_claims c
+        JOIN travel_trips t ON c.trip_id = t.trip_id
+        WHERE c.claim_id = :claim_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':claim_id' => $claim_id]);
+    $claim = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    if (file_exists(__DIR__ . '/install.php')) {
+        require_once __DIR__ . '/install.php';
+        exit;
+    }
+}
 
 if (!$claim) {
-    die("ไม่พบข้อมูลใบขอเบิกเลขที่ #CLAIM-" . str_pad($claim_id, 5, '0', STR_PAD_LEFT));
+    die("<div style='font-family: sans-serif; padding: 40px; text-align: center;'><h3>⚠️ ไม่พบข้อมูลใบขอเบิกเลขที่ #CLAIM-" . str_pad($claim_id, 5, '0', STR_PAD_LEFT) . "</h3><p><a href='approvals.php'>กลับหน้าศูนย์อนุมัติ</a></p></div>");
 }
 
 // ดึงจุดแวะ (Waypoints)

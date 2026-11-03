@@ -56,13 +56,16 @@ if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
     } catch (Exception $e) {}
 }
 
-// ตรวจสอบว่าตาราง travel_claims มีหรือยัง ถ้ายังไม่มีให้รัน install อัตโนมัติทันที
+// ตรวจสอบโครงสร้างตารางและข้อมูลอัตโนมัติ หากยังไม่สมบูรณ์ให้รัน install.php ซ่อมแซมทันที
 if ($pdo) {
     try {
-        $pdo->query('SELECT 1 FROM travel_claims LIMIT 1');
+        $pdo->query('SELECT c.claim_id, t.trip_id FROM travel_claims c JOIN travel_trips t ON c.trip_id = t.trip_id LIMIT 1');
     } catch (Exception $e) {
         if (file_exists(__DIR__ . '/install.php')) {
             require_once __DIR__ . '/install.php';
+            exit;
+        } elseif (file_exists(__DIR__ . '/../travel/install.php')) {
+            require_once __DIR__ . '/../travel/install.php';
             exit;
         }
     }
@@ -71,19 +74,28 @@ $filter_status = $_GET['status'] ?? 'all';
 $filter_month  = $_GET['month'] ?? date('Y-m');
 
 // ดึงข้อมูลสรุป KPI ใบขอเบิก
-$sql_kpi = "
-    SELECT 
-        COUNT(CASE WHEN c.claim_status = 'submitted' THEN 1 END) AS pending_count,
-        COALESCE(SUM(CASE WHEN c.claim_status = 'submitted' THEN c.total_amount ELSE 0 END), 0) AS pending_amount,
-        COUNT(CASE WHEN c.claim_status = 'approved' AND DATE_FORMAT(t.trip_date, '%Y-%m') = :month THEN 1 END) AS approved_count,
-        COALESCE(SUM(CASE WHEN c.claim_status = 'approved' AND DATE_FORMAT(t.trip_date, '%Y-%m') = :month THEN c.total_amount ELSE 0 END), 0) AS approved_amount,
-        COUNT(CASE WHEN c.claim_status = 'rejected' AND DATE_FORMAT(t.trip_date, '%Y-%m') = :month THEN 1 END) AS rejected_count
-    FROM travel_claims c
-    JOIN travel_trips t ON c.trip_id = t.trip_id
-";
-$stmt_kpi = $pdo->prepare($sql_kpi);
-$stmt_kpi->execute([':month' => $filter_month]);
-$kpi = $stmt_kpi->fetch(PDO::FETCH_ASSOC);
+$kpi = ['pending_count' => 0, 'pending_amount' => 0, 'approved_count' => 0, 'approved_amount' => 0, 'rejected_count' => 0];
+try {
+    $sql_kpi = "
+        SELECT 
+            COUNT(CASE WHEN c.claim_status = 'submitted' THEN 1 END) AS pending_count,
+            COALESCE(SUM(CASE WHEN c.claim_status = 'submitted' THEN c.total_amount ELSE 0 END), 0) AS pending_amount,
+            COUNT(CASE WHEN c.claim_status = 'approved' AND DATE_FORMAT(t.trip_date, '%Y-%m') = :month THEN 1 END) AS approved_count,
+            COALESCE(SUM(CASE WHEN c.claim_status = 'approved' AND DATE_FORMAT(t.trip_date, '%Y-%m') = :month THEN c.total_amount ELSE 0 END), 0) AS approved_amount,
+            COUNT(CASE WHEN c.claim_status = 'rejected' AND DATE_FORMAT(t.trip_date, '%Y-%m') = :month THEN 1 END) AS rejected_count
+        FROM travel_claims c
+        JOIN travel_trips t ON c.trip_id = t.trip_id
+    ";
+    $stmt_kpi = $pdo->prepare($sql_kpi);
+    $stmt_kpi->execute([':month' => $filter_month]);
+    $kpi_res = $stmt_kpi->fetch(PDO::FETCH_ASSOC);
+    if ($kpi_res) $kpi = $kpi_res;
+} catch (Exception $e) {
+    if (file_exists(__DIR__ . '/install.php')) {
+        require_once __DIR__ . '/install.php';
+        exit;
+    }
+}
 
 // สร้างคำสั่ง SQL สำหรับดึงรายการใบขอเบิก
 $where_clauses = ["DATE_FORMAT(t.trip_date, '%Y-%m') = :month"];
@@ -129,9 +141,17 @@ $sql_claims = "
     WHERE {$where_sql}
     ORDER BY c.claim_id DESC
 ";
-$stmt_claims = $pdo->prepare($sql_claims);
-$stmt_claims->execute($params);
-$claims = $stmt_claims->fetchAll(PDO::FETCH_ASSOC);
+$claims = [];
+try {
+    $stmt_claims = $pdo->prepare($sql_claims);
+    $stmt_claims->execute($params);
+    $claims = $stmt_claims->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    if (file_exists(__DIR__ . '/install.php')) {
+        require_once __DIR__ . '/install.php';
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="th">
