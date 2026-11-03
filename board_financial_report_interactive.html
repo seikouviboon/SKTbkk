@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานการเงินประจำเดือนเพื่อนำเสนอที่ประชุมคณะกรรมการ — สกต.กทม. จำกัด</title>
+    <!-- Google Fonts & Bootstrap 5 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-baac: #008751;
+            --primary-dark: #005f38;
+            --accent-gold: #f59e0b;
+        }
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .navbar-baac {
+            background: linear-gradient(135deg, var(--primary-baac) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .card-custom {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+        }
+        .btn-baac {
+            background-color: var(--primary-baac);
+            color: white;
+            font-weight: 500;
+        }
+        .btn-baac:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+        .money-cell {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-weight: 600;
+        }
+        .table-finance th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-baac);
+        }
+        .signature-box {
+            border-top: 1px dashed #94a3b8;
+            padding-top: 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        @media print {
+            .no-print, .navbar, .btn, footer { display: none !important; }
+            body { background: white !important; font-size: 10.5pt; }
+            .card { border: none !important; box-shadow: none !important; }
+            .page-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- แถบนำทาง -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-baac sticky-top py-2 no-print">
+    <div class="container-fluid px-3">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="https://sktbkk.seikouedu.com/dashboard.php">
+            <span class="fs-4">🌾</span>
+            <div>
+                <span class="d-block lh-1 fs-5">สกต.กทม.</span>
+                <small class="text-white-50" style="font-size: 0.72rem; font-weight: normal;">ระบบจัดการข้าวสาร & ฝากขาย</small>
+            </div>
+        </a>
+
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <!-- ปุ่ม Home สีทองโดดเด่น -->
+            <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-warning btn-sm fw-bold px-3 py-1 shadow-sm d-flex align-items-center gap-1" style="border-radius: 8px;">
+                <i class="bi bi-house-door-fill text-dark"></i>
+                <span class="text-dark">หน้าแรก สกต. (Home)</span>
+            </a>
+            <button onclick="window.print()" class="btn btn-outline-light btn-sm px-3">
+                <i class="bi bi-printer me-1"></i> พิมพ์ชุดรายงาน A4
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <!-- แถบข้อมูลหัวรายงานและตัวกรอง -->
+    <div class="card card-custom p-4 mb-4 bg-white no-print">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-success px-2 py-1"><i class="bi bi-shield-check me-1"></i> มาตรฐาน กรมตรวจบัญชีสหกรณ์ (กตส.)</span>
+                    <span class="badge bg-warning text-dark border"><i class="bi bi-star-fill me-1"></i> เอกสารประชุมคณะกรรมการประจำเดือน</span>
+                </div>
+                <h4 class="fw-bold mb-1 text-dark">
+                    <i class="bi bi-journal-bookmark-fill text-success me-2"></i>รายงานสรุปสาระสำคัญทางการเงินเพื่อนำเสนอที่ประชุมประจำเดือน
+                </h4>
+                <p class="text-muted small mb-0">
+                    สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (สกต.กทม.) | ประจำงวด: <strong>พฤศจิกายน 2569</strong>
+                </p>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="https://sktbkk.seikouedu.com/backup_and_mockup_finance.php" class="btn btn-outline-primary btn-sm px-3">
+                    <i class="bi bi-database-gear me-1"></i> ระบบสำรองข้อมูล & Mock-up
+                </a>
+                <a href="https://sktbkk.seikouedu.com/restore_initial_data.php" class="btn btn-outline-danger btn-sm px-3">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> คืนค่าข้อมูลเดิม (Restore)
+                </a>
+            </div>
+        </div>
+
+        <hr class="my-3">
+
+        <div class="row g-2 align-items-center">
+            <div class="col-md-6">
+                <div class="small text-muted">รอบบัญชีที่นำเสนอ: <strong>พฤศจิกายน 2569 (2026-11)</strong> | ทุนหมุนเวียนตั้งต้น: <strong>฿50,000.00</strong></div>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <span class="badge bg-success py-2 px-3"><i class="bi bi-check-circle-fill me-1"></i> ยอดดุลทางบัญชี: เดบิต = เครดิต 100% Balanced (ผลต่าง ฿0.00)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- กรอบรายงานหลักทางการ (Printable) -->
+    <div class="card card-custom p-4 p-md-5 mb-4 bg-white">
+        
+        <div class="text-center pb-3 mb-4 border-bottom border-2 border-success">
+            <h5 class="fw-bold mb-1">สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (สกต.กทม.)</h5>
+            <h6 class="fw-semibold text-muted mb-1">รายงานสรุปสาระสำคัญทางการเงินเพื่อนำเสนอที่ประชุมคณะกรรมการดำเนินการ</h6>
+            <div class="text-secondary small">
+                สำหรับรอบเดือน: <strong>พฤศจิกายน 2569</strong> | ข้อมูล ณ วันที่ 03/11/2026
+            </div>
+        </div>
+
+        <!-- แท็บเลือกระบบรายงาน 5 หมวด -->
+        <ul class="nav nav-pills nav-fill mb-4 p-1 bg-light rounded no-print" id="reportTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-summary" type="button">
+                    <i class="bi bi-table me-1"></i> 1. สรุปภาพรวมที่ประชุม
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-trial" type="button">
+                    <i class="bi bi-clipboard2-check me-1"></i> 2. งบทดลอง (Trial Balance)
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-income" type="button">
+                    <i class="bi bi-graph-up-arrow me-1"></i> 3. งบกำไรขาดทุน
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-cash" type="button">
+                    <i class="bi bi-cash-coin me-1"></i> 4. รายงานกระแสเงินสด
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-balance" type="button">
+                    <i class="bi bi-bank me-1"></i> 5. งบแสดงฐานะการเงิน
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="reportTabContent">
+
+            <!-- TAB 1: SUMMARY -->
+            <div class="tab-pane fade show active" id="tab-summary">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-card-checklist text-success me-2"></i>ตารางสรุปเอกสารการเงินสำหรับการนำเสนอที่ประชุมประจำเดือน</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle table-finance mb-0">
+                        <thead>
+                            <tr class="table-success text-center">
+                                <th style="width: 22%;">เอกสารการเงิน</th>
+                                <th style="width: 15%;">ความจำเป็น</th>
+                                <th style="width: 35%;">วัตถุประสงค์หลักในการนำเสนอ</th>
+                                <th style="width: 28%;">สถานะและตัวเลขสำคัญ ณ วันสิ้นเดือน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold">
+                                    <div class="text-success"><i class="bi bi-check2-square me-1"></i> 1. งบทดลอง</div>
+                                    <small class="text-muted fw-normal">(Trial Balance)</small>
+                                </td>
+                                <td class="text-center"><span class="badge bg-warning text-dark px-2 py-1">จำเป็นต้องมี</span></td>
+                                <td>แสดงยอดดุลทางบัญชี ณ วันสิ้นเดือน เพื่อยืนยันว่าการลงบัญชีเดบิต-เครดิตครบถ้วนถูกต้องตามระเบียบ กตส.</td>
+                                <td>
+                                    <div class="text-success fw-bold"><i class="bi bi-shield-fill-check me-1"></i> ยอดดุลลงตัวสมบูรณ์ 100%</div>
+                                    <small class="text-muted">เดบิต = เครดิต ฿317,390.00 (ผลต่าง ฿0.00)</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    <div class="text-primary"><i class="bi bi-graph-up me-1"></i> 2. งบกำไรขาดทุน</div>
+                                    <small class="text-muted fw-normal">(Income Statement)</small>
+                                </td>
+                                <td class="text-center"><span class="badge bg-danger px-2 py-1">หัวใจหลัก</span></td>
+                                <td>แสดงรายได้จากการขาย, ต้นทุนขาย, กำไรขั้นต้น, ค่าใช้จ่ายดำเนินงาน และกำไรสุทธิ</td>
+                                <td>
+                                    <div class="d-flex justify-content-between small border-bottom py-1">
+                                        <span>รายได้ขายสุทธิ:</span>
+                                        <strong>฿201,840.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small border-bottom py-1">
+                                        <span>กำไรขั้นต้น (22.0%):</span>
+                                        <strong class="text-success">฿44,360.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small py-1">
+                                        <span>กำไรสุทธิคงเหลือ:</span>
+                                        <strong class="text-success">฿20,415.00</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    <div class="text-info"><i class="bi bi-cash-stack me-1"></i> 3. กระแสเงินสด</div>
+                                    <small class="text-muted fw-normal">(Cash Flows)</small>
+                                </td>
+                                <td class="text-center"><span class="badge bg-danger px-2 py-1">หัวใจหลัก</span></td>
+                                <td>สรุปเงินสดในมือ/เงินฝากธนาคาร เงินทุนหมุนเวียนคงเหลือ และภาระหนี้สินที่ต้องชำระ</td>
+                                <td>
+                                    <div class="d-flex justify-content-between small border-bottom py-1">
+                                        <span>เงินฝากธนาคารคงเหลือ:</span>
+                                        <strong class="text-primary">฿238,540.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small py-1">
+                                        <span>ค่านายหน้าร้านค้างจ่าย:</span>
+                                        <span class="text-warning text-dark">฿10,645.00</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    <div class="text-dark"><i class="bi bi-bank2 me-1"></i> 4. งบแสดงฐานะการเงิน</div>
+                                    <small class="text-muted fw-normal">(Balance Sheet ย่อ)</small>
+                                </td>
+                                <td class="text-center"><span class="badge bg-info text-dark px-2 py-1">สรุปภาพรวม</span></td>
+                                <td>ดูสถานะสินทรัพย์รวม สินค้าคงเหลือ เจ้าหนี้การค้า และส่วนของทุน สกต.กทม.</td>
+                                <td>
+                                    <div class="d-flex justify-content-between small border-bottom py-1">
+                                        <span>สินทรัพย์รวม:</span>
+                                        <strong class="text-success">฿306,110.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small py-1">
+                                        <span>หนี้สินและทุน:</span>
+                                        <strong class="text-dark">฿306,110.00</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 4 KPI Cards -->
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="p-3 border rounded bg-light">
+                            <div class="text-muted small">ยอดขายสุทธิประจำเดือน</div>
+                            <h4 class="fw-bold text-success mb-0">฿201,840.00</h4>
+                            <small class="text-muted">1,424 ถุง (22 บิล)</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="p-3 border rounded bg-light">
+                            <div class="text-muted small">กำไรขั้นต้น (Margin 22%)</div>
+                            <h4 class="fw-bold text-primary mb-0">฿44,360.00</h4>
+                            <small class="text-muted">ต้นทุนขาย ฿157,480.00</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="p-3 border rounded bg-light">
+                            <div class="text-muted small">ค่าใช้จ่ายดำเนินงานรวม</div>
+                            <h4 class="fw-bold text-danger mb-0">฿23,945.00</h4>
+                            <small class="text-muted">นายหน้า ฿10,645 | ขนส่ง/เบี้ยเลี้ยง ฿13,300</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="p-3 border rounded bg-light">
+                            <div class="text-muted small">กำไรสุทธิคงเหลือ สกต.</div>
+                            <h4 class="fw-bold text-success mb-0">฿20,415.00</h4>
+                            <small class="text-success"><i class="bi bi-arrow-up-right me-1"></i>ผลประกอบการเป็นบวก 10.1%</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: TRIAL BALANCE -->
+            <div class="tab-pane fade" id="tab-trial">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clipboard2-check text-success me-2"></i>งบทดลอง (Trial Balance) ณ วันสิ้นงวด พฤศจิกายน 2569</h6>
+                    <span class="badge bg-success px-3 py-2"><i class="bi bi-check2-circle me-1"></i> ยอดเดบิต = เครดิต ถูกต้องสมบูรณ์ 100%</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle table-finance mb-0">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th style="width: 12%;">รหัสบัญชี</th>
+                                <th style="width: 48%; text-align: left;">ชื่อบัญชี</th>
+                                <th style="width: 20%; text-align: right;">เดบิต (Debit)</th>
+                                <th style="width: 20%; text-align: right;">เครดิต (Credit)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">1111</td>
+                                <td><span class="fw-semibold">เงินฝากธนาคารเพื่อการดำเนินงาน (ธ.ก.ส. / แม่มณี SCB)</span> <span class="badge bg-light text-secondary border ms-1">สินทรัพย์</span></td>
+                                <td class="text-end money-cell">238,540.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">1141</td>
+                                <td><span class="fw-semibold">สินค้าคงเหลือ - ข้าวสารคลังใหญ่ สกต.กทม.</span> <span class="badge bg-light text-secondary border ms-1">สินทรัพย์</span></td>
+                                <td class="text-end money-cell">37,100.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">1142</td>
+                                <td><span class="fw-semibold">สินค้าคงเหลือ - ข้าวสารฝากขาย ณ ร้านค้าตัวแทน</span> <span class="badge bg-light text-secondary border ms-1">สินทรัพย์</span></td>
+                                <td class="text-end money-cell">30,470.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">2111</td>
+                                <td><span class="fw-semibold">เจ้าหนี้การค้า - สหกรณ์การเกษตรเกษตรวิสัย จำกัด</span> <span class="badge bg-light text-secondary border ms-1">หนี้สิน</span></td>
+                                <td class="text-end money-cell">-</td>
+                                <td class="text-end money-cell">225,480.00</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">2121</td>
+                                <td><span class="fw-semibold">ค่านายหน้าร้านค้าตัวแทนค้างจ่าย</span> <span class="badge bg-light text-secondary border ms-1">หนี้สิน</span></td>
+                                <td class="text-end money-cell">-</td>
+                                <td class="text-end money-cell">10,645.00</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">3111</td>
+                                <td><span class="fw-semibold">เงินทุนหมุนเวียนดำเนินงาน สกต.กทม.</span> <span class="badge bg-light text-secondary border ms-1">ทุน</span></td>
+                                <td class="text-end money-cell">-</td>
+                                <td class="text-end money-cell">50,000.00</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">4111</td>
+                                <td><span class="fw-semibold">รายได้จากการจำหน่ายข้าวสาร</span> <span class="badge bg-light text-secondary border ms-1">รายได้</span></td>
+                                <td class="text-end money-cell">-</td>
+                                <td class="text-end money-cell">201,840.00</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5111</td>
+                                <td><span class="fw-semibold">ต้นทุนขายข้าวสาร (Cost of Goods Sold - COGS)</span> <span class="badge bg-light text-secondary border ms-1">ต้นทุน</span></td>
+                                <td class="text-end money-cell">157,480.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5211</td>
+                                <td><span class="fw-semibold">ค่าตอบแทน/ค่านายหน้าร้านค้าตัวแทนจำหน่าย</span> <span class="badge bg-light text-secondary border ms-1">ค่าใช้จ่าย</span></td>
+                                <td class="text-end money-cell">10,645.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5311</td>
+                                <td><span class="fw-semibold">ค่าน้ำมันเชื้อเพลิงขนส่งข้าวสาร</span> <span class="badge bg-light text-secondary border ms-1">ค่าใช้จ่าย</span></td>
+                                <td class="text-end money-cell">3,650.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5312</td>
+                                <td><span class="fw-semibold">ค่าจ้างเหมารถขนส่งกระจายสินค้าและค่าเดินทาง GPS</span> <span class="badge bg-light text-secondary border ms-1">ค่าใช้จ่าย</span></td>
+                                <td class="text-end money-cell">3,150.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5313</td>
+                                <td><span class="fw-semibold">ค่าเบี้ยเลี้ยงพนักงานขายประจำจุดจำหน่าย</span> <span class="badge bg-light text-secondary border ms-1">ค่าใช้จ่าย</span></td>
+                                <td class="text-end money-cell">3,200.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5314</td>
+                                <td><span class="fw-semibold">ค่าบรรจุภัณฑ์และวัสดุสิ้นเปลือง</span> <span class="badge bg-light text-secondary border ms-1">ค่าใช้จ่าย</span></td>
+                                <td class="text-end money-cell">1,800.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace text-muted">5315</td>
+                                <td><span class="fw-semibold">ค่าส่งเสริมการขาย / ป้ายประชาสัมพันธ์</span> <span class="badge bg-light text-secondary border ms-1">ค่าใช้จ่าย</span></td>
+                                <td class="text-end money-cell">1,500.00</td>
+                                <td class="text-end money-cell">-</td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-success fw-bold">
+                            <tr>
+                                <td colspan="2" class="text-center">รวมยอดดุลทั้งสิ้น (Grand Total)</td>
+                                <td class="text-end money-cell text-success fs-6">฿487,385.00</td>
+                                <td class="text-end money-cell text-success fs-6">฿487,385.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center small text-muted">ผลต่างเดบิตและเครดิต (Variance)</td>
+                                <td colspan="2" class="text-center money-cell text-success">฿0.00 (สมดุล 100%)</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 3: INCOME STATEMENT -->
+            <div class="tab-pane fade" id="tab-income">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-graph-up-arrow text-primary me-2"></i>งบกำไรขาดทุน (Income Statement) ประจำเดือน พฤศจิกายน 2569</h6>
+                    <span class="badge bg-primary px-3 py-2"><i class="bi bi-calculator me-1"></i> มาตรฐานสหกรณ์</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle table-finance mb-0">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th style="width: 60%; text-align: left;">รายการทางบัญชี</th>
+                                <th style="width: 40%; text-align: right;">จำนวนเงิน (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-light fw-bold text-success"><td colspan="2"><i class="bi bi-plus-circle me-1"></i> รายได้จากการขาย (Revenues)</td></tr>
+                            <tr>
+                                <td class="ps-4">รายได้จากการจำหน่ายข้าวสารสุทธิ (22 บิล)</td>
+                                <td class="text-end money-cell fw-semibold">฿201,840.00</td>
+                            </tr>
+                            <tr class="table-light fw-bold text-secondary"><td colspan="2"><i class="bi bi-dash-circle me-1"></i> ต้นทุนขาย (Cost of Goods Sold - COGS)</td></tr>
+                            <tr>
+                                <td class="ps-4">ต้นทุนจัดซื้อข้าวสารตามล็อตจริง (สหกรณ์เกษตรวิสัย)</td>
+                                <td class="text-end money-cell text-secondary">(฿157,480.00)</td>
+                            </tr>
+                            <tr class="table-info fw-bold">
+                                <td>กำไรขั้นต้น (Gross Profit) — อัตรากำไร 22.0%</td>
+                                <td class="text-end money-cell text-primary">฿44,360.00</td>
+                            </tr>
+                            <tr class="table-light fw-bold text-danger"><td colspan="2"><i class="bi bi-dash-circle me-1"></i> ค่าใช้จ่ายในการดำเนินงาน (Operating Expenses)</td></tr>
+                            <tr>
+                                <td class="ps-4">ค่าตอบแทน/ค่านายหน้าร้านค้าตัวแทนจำหน่าย</td>
+                                <td class="text-end money-cell">฿10,645.00</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">ค่าน้ำมันเชื้อเพลิงขนส่งข้าวสาร</td>
+                                <td class="text-end money-cell">฿3,650.00</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">ค่าจ้างเหมารถขนส่งกระจายสินค้าและค่าเดินทาง GPS</td>
+                                <td class="text-end money-cell">฿3,150.00</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">ค่าเบี้ยเลี้ยงพนักงานขายประจำจุดจำหน่าย</td>
+                                <td class="text-end money-cell">฿3,200.00</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">ค่าบรรจุภัณฑ์และวัสดุสิ้นเปลือง</td>
+                                <td class="text-end money-cell">฿1,800.00</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">ค่าส่งเสริมการขาย / ป้ายประชาสัมพันธ์</td>
+                                <td class="text-end money-cell">฿1,500.00</td>
+                            </tr>
+                            <tr class="fw-semibold">
+                                <td class="text-end">รวมค่าใช้จ่ายดำเนินงานทั้งสิ้น</td>
+                                <td class="text-end money-cell text-danger">(฿23,945.00)</td>
+                            </tr>
+                            <tr class="table-success fw-bold fs-6">
+                                <td>กำไรสุทธิคงเหลือ สกต.กทม. (Net Profit) — อัตรากำไรสุทธิ 10.1%</td>
+                                <td class="text-end money-cell text-success">฿20,415.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 4: CASH FLOW -->
+            <div class="tab-pane fade" id="tab-cash">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-cash-coin text-info me-2"></i>รายงานกระแสเงินสด / การรับ-จ่ายเงิน (Statement of Cash Flows)</h6>
+                    <span class="badge bg-info text-dark px-3 py-2">วิเคราะห์สภาพคล่อง</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle table-finance mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 70%;">รายการกระแสเงินสด</th>
+                                <th style="width: 30%; text-align: right;">จำนวนเงิน (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-light fw-semibold">
+                                <td>1. เงินทุนหมุนเวียน / เงินฝากธนาคารยกมาต้นงวด</td>
+                                <td class="text-end money-cell">฿50,000.00</td>
+                            </tr>
+                            <tr class="table-light fw-bold text-success"><td colspan="2"><i class="bi bi-arrow-down-left-circle me-1"></i> 2. กระแสเงินสดรับจากการดำเนินงาน (Cash Inflows)</td></tr>
+                            <tr>
+                                <td class="ps-4">เงินสดรับจากการจำหน่ายข้าวสารผ่าน QR Code แม่มณี / ธ.ก.ส.</td>
+                                <td class="text-end money-cell text-success">+฿201,840.00</td>
+                            </tr>
+                            <tr class="table-light fw-bold text-danger"><td colspan="2"><i class="bi bi-arrow-up-right-circle me-1"></i> 3. กระแสเงินสดจ่ายจากการดำเนินงาน (Cash Outflows)</td></tr>
+                            <tr>
+                                <td class="ps-4">จ่ายค่าใช้จ่ายดำเนินงาน (น้ำมัน, ขนส่ง, เบี้ยเลี้ยง, บรรจุภัณฑ์, ป้าย)</td>
+                                <td class="text-end money-cell text-danger">-฿13,300.00</td>
+                            </tr>
+                            <tr class="table-success fw-bold fs-6">
+                                <td>4. เงินสดและเงินฝากธนาคารคงเหลือปลายงวด (Ending Cash & Bank)</td>
+                                <td class="text-end money-cell text-success">฿238,540.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 p-3 border rounded bg-light">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-clock-history text-warning me-2"></i>ภาระหนี้สินและข้อผูกพันที่ต้องชำระในรอบถัดไป</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered bg-white mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>รายการหนี้สิน / ข้อผูกพัน</th>
+                                    <th>เจ้าหนี้ / ผู้รับเงิน</th>
+                                    <th class="text-end">จำนวนเงินที่ต้องชำระ (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ค่านายหน้าร้านค้าตัวแทนค้างจ่าย</td>
+                                    <td>ร้านค้าตัวแทนจำหน่าย (ธกส สาขาทุ่งครุ, ร้านประเสริฐมินิมาร์ท)</td>
+                                    <td class="text-end money-cell text-warning text-dark">฿10,645.00</td>
+                                </tr>
+                                <tr>
+                                    <td>ชำระค่าข้าวสารส่งมอบ (ตามส่วนที่จำหน่ายได้)</td>
+                                    <td>สหกรณ์การเกษตรเกษตรวิสัย จำกัด (ร้อยเอ็ด)</td>
+                                    <td class="text-end money-cell text-secondary">฿157,480.00</td>
+                                </tr>
+                                <tr class="table-warning fw-bold">
+                                    <td colspan="2" class="text-end">รวมภาระหนี้สินหมุนเวียนที่ต้องชำระรอบถัดไป</td>
+                                    <td class="text-end money-cell">฿168,125.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: BALANCE SHEET -->
+            <div class="tab-pane fade" id="tab-balance">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-bank text-dark me-2"></i>งบแสดงฐานะการเงิน (Balance Sheet ย่อ) ณ วันสิ้นงวด พฤศจิกายน 2569</h6>
+                    <span class="badge bg-success px-3 py-2"><i class="bi bi-check-circle me-1"></i> สินทรัพย์ = หนี้สิน + ทุน (สมดุล 100%)</span>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 border p-3">
+                            <h6 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="bi bi-folder-check me-1"></i> สินทรัพย์ (Assets)</h6>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tbody>
+                                    <tr class="fw-semibold text-muted"><td colspan="2">สินทรัพย์หมุนเวียน:</td></tr>
+                                    <tr>
+                                        <td class="ps-3">เงินสดและเงินฝากธนาคารเพื่อการดำเนินงาน</td>
+                                        <td class="text-end money-cell">฿238,540.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ps-3">สินค้าคงเหลือ - คลังใหญ่ สกต.กทม. (ราคาทุน)</td>
+                                        <td class="text-end money-cell">฿37,100.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ps-3">สินค้าคงเหลือ - ร้านค้าตัวแทนฝากขาย (ราคาทุน)</td>
+                                        <td class="text-end money-cell">฿30,470.00</td>
+                                    </tr>
+                                    <tr class="border-top fw-bold text-success fs-6">
+                                        <td>รวมสินทรัพย์ทั้งสิ้น (Total Assets)</td>
+                                        <td class="text-end money-cell">฿306,110.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card h-100 border p-3">
+                            <h6 class="fw-bold text-danger border-bottom pb-2 mb-3"><i class="bi bi-shield-lock me-1"></i> หนี้สินและส่วนของทุน (Liabilities & Equity)</h6>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tbody>
+                                    <tr class="fw-semibold text-muted"><td colspan="2">หนี้สินหมุนเวียน (Liabilities):</td></tr>
+                                    <tr>
+                                        <td class="ps-3">เจ้าหนี้การค้า - สหกรณ์ผู้ส่งมอบข้าวสาร</td>
+                                        <td class="text-end money-cell">฿225,480.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ps-3">ค่านายหน้าร้านค้าตัวแทนค้างจ่าย</td>
+                                        <td class="text-end money-cell">฿10,645.00</td>
+                                    </tr>
+                                    <tr class="border-bottom fw-semibold">
+                                        <td>รวมหนี้สินทั้งสิ้น</td>
+                                        <td class="text-end money-cell">฿236,125.00</td>
+                                    </tr>
+
+                                    <tr class="fw-semibold text-muted pt-2"><td colspan="2">ส่วนของทุน สกต.กทม. (Equity):</td></tr>
+                                    <tr>
+                                        <td class="ps-3">ทุนดำเนินงานหมุนเวียนตั้งต้น</td>
+                                        <td class="text-end money-cell">฿50,000.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ps-3">กำไรสะสมสุทธิประจำงวด</td>
+                                        <td class="text-end money-cell text-success">฿19,985.00</td>
+                                    </tr>
+                                    <tr class="border-bottom fw-semibold">
+                                        <td>รวมส่วนของทุนทั้งสิ้น</td>
+                                        <td class="text-end money-cell">฿69,985.00</td>
+                                    </tr>
+
+                                    <tr class="border-top fw-bold text-dark fs-6">
+                                        <td>รวมหนี้สินและส่วนของทุนทั้งสิ้น</td>
+                                        <td class="text-end money-cell">฿306,110.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Official Signatures Block (CAD Cooperative Standard) -->
+        <div class="row text-center mt-5 pt-3">
+            <div class="col-3">
+                <div class="signature-box">
+                    <div class="fw-bold">(........................................................)</div>
+                    <div class="small text-muted mt-1">ผู้จัดทำบัญชี</div>
+                    <div class="small text-secondary">เจ้าหน้าที่การเงินและบัญชี สกต.กทม.</div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="signature-box">
+                    <div class="fw-bold">(........................................................)</div>
+                    <div class="small text-muted mt-1">ผู้ตรวจสอบ</div>
+                    <div class="small text-secondary">ผู้จัดการ สกต.กทม.</div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="signature-box">
+                    <div class="fw-bold">(........................................................)</div>
+                    <div class="small text-muted mt-1">ผู้อนุมัติรายงาน</div>
+                    <div class="small text-secondary">ประธานกรรมการดำเนินการ สกต.กทม.</div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="signature-box">
+                    <div class="fw-bold">(........................................................)</div>
+                    <div class="small text-muted mt-1">ผู้สอบบัญชีสหกรณ์</div>
+                    <div class="small text-secondary">กรมตรวจบัญชีสหกรณ์</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<footer class="mt-auto py-3 bg-white border-top text-center text-muted small no-print">
+    <div class="container">
+        &copy; 2026 <strong>สหกรณ์การเกษตรเพื่อการตลาดลูกค้า ธ.ก.ส. กรุงเทพมหานคร จำกัด (สกต.กทม.)</strong> | เอกสารประกอบการประชุมคณะกรรมการ
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
