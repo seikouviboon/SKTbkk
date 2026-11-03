@@ -58,6 +58,22 @@ $db = get_db_connection();
 $msg = [];
 $error = null;
 
+if (isset($_GET['inspect_file'])) {
+    $allowed = ['transfers.php', 'reconcile.php', 'pos.php', 'dashboard.php', 'lots.php', 'stores.php', 'financial_reports.php'];
+    $f = basename($_GET['inspect_file']);
+    $content = '';
+    if (in_array($f, $allowed)) {
+        if (file_exists(__DIR__ . '/' . $f)) {
+            $content = file_get_contents(__DIR__ . '/' . $f);
+        } elseif (file_exists(__DIR__ . '/../' . $f)) {
+            $content = file_get_contents(__DIR__ . '/../' . $f);
+        }
+    }
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['file' => $f, 'len' => strlen($content), 'content' => $content]);
+    exit;
+}
+
 if (isset($_GET['inspect_db']) && $db instanceof PDO) {
     $stmt = $db->query("SHOW TABLES");
     $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
