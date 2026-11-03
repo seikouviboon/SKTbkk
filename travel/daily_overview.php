@@ -331,6 +331,9 @@ unset($_SESSION['flash_msg']);
 <nav class="navbar navbar-dark navbar-baac py-3 sticky-top no-print">
     <div class="container-fluid px-lg-4 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-2">
+            <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-warning btn-sm fw-bold shadow-sm me-1">
+                <i class="bi bi-house-door-fill me-1"></i>หน้าแรก (Home)
+            </a>
             <a href="approvals.php" class="btn btn-outline-light btn-sm me-2">
                 <i class="bi bi-chevron-left me-1"></i>ศูนย์อนุมัติ
             </a>
@@ -341,6 +344,9 @@ unset($_SESSION['flash_msg']);
             </div>
         </div>
         <div class="d-flex align-items-center gap-2">
+            <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-outline-light btn-sm fw-bold">
+                <i class="bi bi-grid-fill me-1"></i>แดชบอร์ดหลัก
+            </a>
             <a href="checkin.php" class="btn btn-warning btn-sm fw-bold">
                 <i class="bi bi-camera-fill me-1"></i>บันทึกจุดแวะ GPS (ใหม่)
             </a>

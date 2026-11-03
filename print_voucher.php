@@ -150,12 +150,18 @@ $waypoints = $stmt_wp->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-<div class="container text-center my-3 no-print">
+<div class="container text-center my-3 no-print d-flex justify-content-center align-items-center gap-2 flex-wrap">
+    <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-warning fw-bold px-3 py-2 shadow-sm">
+        <i class="bi bi-house-door-fill me-1"></i> หน้าแรก สกต. (Home)
+    </a>
     <button onclick="window.print()" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
         🖨️ สั่งพิมพ์เอกสาร (Print A4)
     </button>
-    <a href="https://sktbkk.seikouedu.com/travel/approve.php?id=<?= $claim['claim_id'] ?>" class="btn btn-outline-secondary px-3 py-2 ms-2">
+    <a href="https://sktbkk.seikouedu.com/travel/approve.php?id=<?= $claim['claim_id'] ?>" class="btn btn-outline-secondary px-3 py-2">
         กลับหน้าพิจารณาอนุมัติ
+    </a>
+    <a href="https://sktbkk.seikouedu.com/travel/approvals.php" class="btn btn-outline-dark px-3 py-2">
+        ศูนย์พิจารณาอนุมัติ
     </a>
 </div>
 

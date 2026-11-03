@@ -46,9 +46,13 @@ $current_page = basename($_SERVER['PHP_SELF'] ?? '');
             <?php if ($is_store_staff): ?>
                 <!-- ======================================================== -->
                 <!-- 1. สำหรับหน้าร้านค้า (Staff / ร้านตัวแทนฝากขาย) -->
-                <!-- มีปุ่ม: บันทึกขาย, ตรวจนับสต็อก AI, ระบบส่งข้าว, ปิดสิ้นวันส่งบัญชี -->
-                <!-- (ตัดเฉพาะปุ่ม 'เดินทางปฏิบัติงาน' ออกตามคำสั่ง) -->
+                <!-- มีปุ่ม: หน้าแรก, บันทึกขาย, ตรวจนับสต็อก AI, ระบบส่งข้าว, ปิดสิ้นวันส่งบัญชี -->
                 <!-- ======================================================== -->
+                <li class="nav-item">
+                    <a class="nav-link <?= ($current_page === 'dashboard.php') ? 'active fw-bold' : '' ?>" href="https://sktbkk.seikouedu.com/dashboard.php">
+                        <i class="bi bi-house-door-fill me-1"></i> หน้าแรก
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link <?= ($current_page === 'pos.php') ? 'active fw-bold' : '' ?>" href="https://sktbkk.seikouedu.com/pos.php">
                         <i class="bi bi-cart-check-fill me-1"></i> บันทึกขาย (POS)

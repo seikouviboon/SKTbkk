@@ -235,6 +235,9 @@ if (!$trip && !$claim) {
 <nav class="navbar navbar-dark navbar-baac py-3 sticky-top">
     <div class="container-fluid px-lg-4 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-2">
+            <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-warning btn-sm fw-bold shadow-sm me-1">
+                <i class="bi bi-house-door-fill me-1"></i>หน้าแรก (Home)
+            </a>
             <a href="approvals.php" class="btn btn-outline-light btn-sm me-2">
                 <i class="bi bi-chevron-left me-1"></i>กลับศูนย์อนุมัติ
             </a>
@@ -244,7 +247,10 @@ if (!$trip && !$claim) {
                 <small class="text-white-50">สกต.กทม. #CLAIM-<?= str_pad($claim['claim_id'] ?? 0, 5, '0', STR_PAD_LEFT) ?> (<?= htmlspecialchars($trip['trip_code'] ?? '') ?>)</small>
             </div>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 align-items-center">
+            <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-outline-light btn-sm fw-bold">
+                <i class="bi bi-grid-fill me-1"></i>แดชบอร์ดหลัก
+            </a>
             <a href="daily_overview.php?trip_id=<?= $trip['trip_id'] ?>" class="btn btn-warning btn-sm fw-bold">
                 <i class="bi bi-map-fill me-1"></i>ดูภาพรวมทั้งวัน
             </a>

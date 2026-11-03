@@ -125,7 +125,10 @@ if (file_exists(__DIR__ . '/includes/navbar.php')) {
             <h4 class="fw-bold mb-1"><i class="bi bi-robot text-baac me-2"></i>ระบบ AI ตรวจสอบสต็อกข้าวสาร (Gemini Vision)</h4>
             <p class="text-muted small mb-0">เปรียบเทียบจำนวนถุงแยกขนาด (1 กก., 5 กก., 15 กก.) ในระบบ กับจำนวนที่ AI นับได้จากภาพถ่ายจริง</p>
         </div>
-        <div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="https://sktbkk.seikouedu.com/dashboard.php" class="btn btn-warning btn-sm fw-bold shadow-sm">
+                <i class="bi bi-house-door-fill me-1"></i>หน้าแรก (Home)
+            </a>
             <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
                 <i class="bi bi-cpu me-1"></i> โมเดล: Gemini Vision Multi-Engine (ฟรี 100%)
             </span>
